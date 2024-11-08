@@ -22,5 +22,8 @@ private:
     Ui::MainWindow *ui;
 
     Model& model;
+
+public slots:
+    void handleResizeCanvas();
 };
 #endif // MAINWINDOW_H

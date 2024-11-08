@@ -8,9 +8,34 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     , model(model)
 {
     ui->setupUi(this);
+
+    ui->widthSpinBox->setValue(model.getPixelWidth());
+    ui->heightSpinBox->setValue(model.getPixelHeight());
+
+    ui->widthSpinBox->setRange(1, 256);
+    ui->heightSpinBox->setRange(1, 256);
+
+    connect(ui->widthSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+            this,
+            &MainWindow::handleResizeCanvas);
+    connect(ui->heightSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+            this,
+            &MainWindow::handleResizeCanvas);
+
+    connect(&model, &Model::pixelGridChanged,
+            this, [this]() {
+        //TODO: update the canvas
+    });
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::handleResizeCanvas() {
+    int width = ui->widthSpinBox->value();
+    int height = ui->heightSpinBox->value();
+    model.resizePixelGrid(width, height);
+}
+

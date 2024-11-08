@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <QObject>
+#include <QImage>
 
 class Model : public QObject
 {
@@ -9,7 +10,15 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
-signals:
-};
+    void resizePixelGrid(int width, int height);
 
+    int getPixelWidth() const { return pixelData.width(); }
+    int getPixelHeight() const { return pixelData.height(); }
+
+signals:
+    void pixelGridChanged();
+
+private:
+    QImage pixelData;
+};
 #endif // MODEL_H
