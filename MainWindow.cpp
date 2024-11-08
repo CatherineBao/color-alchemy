@@ -1,9 +1,11 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
+#include "Model.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , model(model)
 {
     ui->setupUi(this);
 }
