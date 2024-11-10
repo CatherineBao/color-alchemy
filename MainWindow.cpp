@@ -39,9 +39,3 @@ void MainWindow::handleResizeCanvas() {
     int height = ui->heightSpinBox->value();
     model.resizePixelGrid(width, height);
 }
-
-void MainWindow::on_penToolButton_clicked()
-{
-    ui -> penToolButton -> setFocus();
-    emit penClicked();
-}

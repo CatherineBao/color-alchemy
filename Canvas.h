@@ -13,8 +13,7 @@ class Canvas : public QWidget
 public:
     Canvas(QWidget *parent = nullptr);
 
-    void setGridCellSize(int size);
-    QColor penColor() const { return myPenColor; }
+    QColor penColor() const { return currentPenColor; }
     int penWidth() const { return myPenWidth; }
 
 public slots:
@@ -34,13 +33,12 @@ private:
     bool drawing = false;
     int gridWidth = 36;
     int gridHeight = 36;
-    int gridCellSize = 10;
+    int pixelSize = 10;
     int myPenWidth = 1;
+    QColor currentToolColor = Qt::black;
     QColor currentPenColor = Qt::black;
-    QColor myPenColor = Qt::black;
     QColor backgroundColor = Qt::white;
 
-    QPoint lastPoint;
     QImage image;
 };
 

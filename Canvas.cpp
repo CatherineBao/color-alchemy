@@ -39,17 +39,17 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
 void Canvas::drawPixel(const QPoint &pos)
 {
-    int x = pos.x() / gridCellSize;
-    int y = pos.y() / gridCellSize;
+    int x = pos.x() / pixelSize;
+    int y = pos.y() / pixelSize;
 
     if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
         return;
 
     QPainter painter(&image);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(myPenColor);
-    painter.drawRect(x * gridCellSize, y * gridCellSize, gridCellSize, gridCellSize);
-    update(QRect(x * gridCellSize, y * gridCellSize, gridCellSize, gridCellSize));
+    painter.setBrush(currentToolColor);
+    painter.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    update(QRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize));
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
@@ -58,22 +58,18 @@ void Canvas::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect();
     painter.drawImage(dirtyRect, image, dirtyRect);
 
+    // draw grids
     painter.setPen(Qt::gray);
     for (int i = 0; i <= gridWidth; ++i)
-        painter.drawLine(i * gridCellSize, 0, i * gridCellSize, gridHeight * gridCellSize);
+        painter.drawLine(i * pixelSize, 0, i * pixelSize, gridHeight * pixelSize);
     for (int i = 0; i <= gridHeight; ++i)
-        painter.drawLine(0, i * gridCellSize, gridWidth * gridCellSize, i * gridCellSize);
+        painter.drawLine(0, i * pixelSize, gridWidth * pixelSize, i * pixelSize);
 }
 
 void Canvas::setPen() {
-    myPenColor = currentPenColor;
+    currentToolColor = currentPenColor;
 }
 
 void Canvas::setEraser() {
-    myPenColor = backgroundColor;
-}
-
-void Canvas::setGridCellSize(int size) {
-    gridCellSize = size;
-    update();
+    currentToolColor = backgroundColor;
 }

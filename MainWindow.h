@@ -29,7 +29,5 @@ signals:
 
 public slots:
     void handleResizeCanvas();
-private slots:
-    void on_penToolButton_clicked();
 };
 #endif // MAINWINDOW_H
