@@ -11,22 +11,22 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->setupUi(this);
     canvas = qobject_cast<Canvas*>(ui->editor);
 
-    ui->widthSpinBox->setValue(model.getPixelWidth());
-    ui->heightSpinBox->setValue(model.getPixelHeight());
-
-    ui->widthSpinBox->setRange(1, 256);
-    ui->heightSpinBox->setRange(1, 256);
+    ui->penSize->setValue(1);
+    ui->eraserSize->setValue(1);
 
     connect(ui->penToolButton, &QPushButton::clicked, canvas, &Canvas::setPen);
     connect(ui->eraserToolButton, &QPushButton::clicked, canvas, &Canvas::setEraser);
 
-    connect(ui->widthSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+    connect(ui->penSize, &QSpinBox::valueChanged, canvas, &Canvas::changePenSize);
+    connect(ui->eraserSize, &QSpinBox::valueChanged, canvas, &Canvas::changeEraserSize);
+
+    // NOTE: I'm not sure what this did... but I think I mssed it up
+    connect(ui->eraserSize, QOverload<int>::of(&QSpinBox::valueChanged),
             this,
             &MainWindow::handleResizeCanvas);
-    connect(ui->heightSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+    connect(ui->penSize, QOverload<int>::of(&QSpinBox::valueChanged),
             this,
             &MainWindow::handleResizeCanvas);
-    ui ->penToolButton->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -34,8 +34,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+// NOTE: I'm not sure what this did... but I think I mssed it up
 void MainWindow::handleResizeCanvas() {
-    int width = ui->widthSpinBox->value();
-    int height = ui->heightSpinBox->value();
+    int width = ui->eraserSize->value();
+    int height = ui->penSize->value();
     model.resizePixelGrid(width, height);
 }

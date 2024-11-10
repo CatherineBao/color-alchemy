@@ -48,8 +48,13 @@ void Canvas::drawPixel(const QPoint &pos)
     QPainter painter(&image);
     painter.setPen(Qt::NoPen);
     painter.setBrush(currentToolColor);
-    painter.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-    update(QRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize));
+
+    int scaledX = x * pixelSize;
+    int scaledY = y * pixelSize;
+    int drawWidth = pixelSize * currentToolWidth;
+
+    painter.drawRect(scaledX, scaledY, drawWidth, drawWidth);
+    update(QRect(scaledX, scaledY, drawWidth, drawWidth));
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
@@ -67,9 +72,27 @@ void Canvas::paintEvent(QPaintEvent *event)
 }
 
 void Canvas::setPen() {
+    isPen = true;
     currentToolColor = currentPenColor;
+    currentToolWidth = currentPenWidth;
 }
 
 void Canvas::setEraser() {
+    isPen = false;
     currentToolColor = backgroundColor;
+    currentToolWidth = currentEraserWidth;
+}
+
+void Canvas::changePenSize(int size) {
+    currentPenWidth = size;
+
+    if (isPen)
+        currentToolWidth = size;
+}
+
+void Canvas::changeEraserSize(int size) {
+    currentEraserWidth = size;
+
+    if (!isPen)
+        currentToolWidth = size;
 }

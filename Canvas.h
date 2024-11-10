@@ -14,11 +14,13 @@ public:
     Canvas(QWidget *parent = nullptr);
 
     QColor penColor() const { return currentPenColor; }
-    int penWidth() const { return myPenWidth; }
+    int penWidth() const { return currentPenWidth; }
 
 public slots:
     void setPen();
     void setEraser();
+    void changePenSize(int size);
+    void changeEraserSize(int size);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -34,7 +36,13 @@ private:
     int gridWidth = 36;
     int gridHeight = 36;
     int pixelSize = 10;
-    int myPenWidth = 1;
+
+    bool isPen = true;
+
+    int currentToolWidth = 1;
+    int currentPenWidth = 1;
+    int currentEraserWidth = 1;
+
     QColor currentToolColor = Qt::black;
     QColor currentPenColor = Qt::black;
     QColor backgroundColor = Qt::white;
