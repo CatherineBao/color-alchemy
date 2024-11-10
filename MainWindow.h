@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "Model.h"
+#include "Canvas.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,10 +21,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
+    Canvas *canvas;
     Model& model;
+
+signals:
+    void penClicked();
 
 public slots:
     void handleResizeCanvas();
+private slots:
+    void on_penToolButton_clicked();
 };
 #endif // MAINWINDOW_H

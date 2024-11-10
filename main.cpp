@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "Canvas.h"
 
 #include <QApplication>
 
