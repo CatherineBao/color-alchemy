@@ -40,9 +40,15 @@ MainWindow::~MainWindow()
 
 // NOTE: I'm not sure what this did... but I think I mssed it up
 void MainWindow::handleCanvasResize() {
+    ui->canvasWidthBox->blockSignals(true);
+    ui->canvasHeightBox->blockSignals(true);
+
     int width = ui->canvasWidthBox->value();
     int height = ui->canvasHeightBox->value();
 
     model.resizePixelGrid(width, height);
     canvas->resizeGrid(width, height);
+
+    ui->canvasWidthBox->blockSignals(false);
+    ui->canvasHeightBox->blockSignals(false);
 }

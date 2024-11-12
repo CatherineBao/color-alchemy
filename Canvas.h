@@ -34,11 +34,13 @@ protected:
 private:
     void drawPixel(const QPoint &pos);
     void initializeImage(int width, int height);
+    void calculatePixelSize();
 
     bool drawing = false;
     int gridWidth = 36;
     int gridHeight = 36;
     int pixelSize = 10;
+    const int MIN_PIXEL_SIZE = 4;
 
     bool isPen = true;
 

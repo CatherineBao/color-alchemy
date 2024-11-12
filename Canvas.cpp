@@ -51,7 +51,7 @@ void Canvas::drawPixel(const QPoint &pos)
 
     int scaledX = x * pixelSize;
     int scaledY = y * pixelSize;
-    int drawWidth = pixelSize * currentToolWidth;
+    int drawWidth = qMin(pixelSize * currentToolWidth, pixelSize * gridWidth - x);
 
     painter.drawRect(scaledX, scaledY, drawWidth, drawWidth);
     update(QRect(scaledX, scaledY, drawWidth, drawWidth));
@@ -100,9 +100,49 @@ void Canvas::changeEraserSize(int size) {
 void Canvas::resizeGrid(int width, int height) {
     if (width <= 0 || height <= 0) return;
 
+    QImage oldImage = image;
+    int oldWidth = gridWidth;
+    int oldHeight = gridHeight;
+    int oldPixelSize = pixelSize;
+
+
     gridWidth = width;
     gridHeight = height;
-    pixelSize = this->width() / width;
+    calculatePixelSize();
 
+    QImage newImage(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
+    newImage.fill(backgroundColor);
+
+    if(!oldImage.isNull()) {
+        QPainter painter(&newImage);
+        painter.setPen(Qt::NoPen);
+
+        for(int x = 0; x < oldWidth; x++) {
+            for(int y = 0; y < oldHeight; y++) {
+                if(x < gridWidth && y < gridHeight) {
+                    QColor pixelColor = oldImage.pixelColor(x * oldPixelSize, y * oldPixelSize);
+
+                    if(pixelColor != backgroundColor) {
+                        painter.setBrush(pixelColor);
+                        painter.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+    }
+
+    image = newImage;
+    setFixedSize(gridWidth * pixelSize, gridHeight * pixelSize);
     update();
+}
+
+void Canvas::calculatePixelSize() {
+    int widgetWidth = 360;
+    int widgetHeight = 360;
+
+    double horizontalSize = static_cast<double>(widgetWidth) / gridWidth;
+    double verticalSize = static_cast<double>(widgetHeight) / gridHeight;
+
+    pixelSize = static_cast<int>(floor(qMin(horizontalSize, verticalSize)));
+    pixelSize = qMax(pixelSize, MIN_PIXEL_SIZE);
 }

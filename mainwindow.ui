@@ -119,7 +119,7 @@ QPushButton {
    <widget class="QSpinBox" name="canvasWidthBox">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>140</x>
       <y>30</y>
       <width>42</width>
       <height>26</height>
