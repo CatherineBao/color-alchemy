@@ -15,6 +15,9 @@ public:
 
     QColor penColor() const { return currentPenColor; }
     int penWidth() const { return currentPenWidth; }
+    void resizeGrid(int width, int height);
+    int getGridWidth() const { return gridWidth; }
+    int getGridHeight() const { return gridHeight; }
 
 public slots:
     void setPen();

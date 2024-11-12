@@ -28,6 +28,6 @@ signals:
     void penClicked();
 
 public slots:
-    void handleResizeCanvas();
+    void handleCanvasResize();
 };
 #endif // MAINWINDOW_H

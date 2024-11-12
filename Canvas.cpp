@@ -96,3 +96,13 @@ void Canvas::changeEraserSize(int size) {
     if (!isPen)
         currentToolWidth = size;
 }
+
+void Canvas::resizeGrid(int width, int height) {
+    if (width <= 0 || height <= 0) return;
+
+    gridWidth = width;
+    gridHeight = height;
+    pixelSize = this->width() / width;
+
+    update();
+}
