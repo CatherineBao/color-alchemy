@@ -20,7 +20,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->canvasHeightBox->setRange(1, 100);
 
     connect(ui->penToolButton, &QPushButton::clicked, canvas, &Canvas::setPen);
+    connect(ui->penToolButton, &QPushButton::clicked, canvas, [this](){ui->eraserToolButton->setChecked(false);});
     connect(ui->eraserToolButton, &QPushButton::clicked, canvas, &Canvas::setEraser);
+    connect(ui->eraserToolButton, &QPushButton::clicked, canvas, [this](){ui->penToolButton->setChecked(false);});
 
     connect(ui->penSize, &QSpinBox::valueChanged, canvas, &Canvas::changePenSize);
     connect(ui->eraserSize, &QSpinBox::valueChanged, canvas, &Canvas::changeEraserSize);
