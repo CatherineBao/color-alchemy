@@ -24,6 +24,7 @@ public slots:
     void setEraser();
     void changePenSize(int size);
     void changeEraserSize(int size);
+    void changePenColor(const QColor &color);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

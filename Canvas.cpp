@@ -146,3 +146,8 @@ void Canvas::calculatePixelSize() {
     pixelSize = static_cast<int>(floor(qMin(horizontalSize, verticalSize)));
     pixelSize = qMax(pixelSize, MIN_PIXEL_SIZE);
 }
+
+void Canvas::changePenColor(const QColor &color){
+    currentPenColor = color;
+    this->setPen();
+}

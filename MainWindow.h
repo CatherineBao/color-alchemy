@@ -26,8 +26,10 @@ private:
 
 signals:
     void penClicked();
+    void changeColor(const QColor &color);
 
 public slots:
     void handleCanvasResize();
+    void openColorPicker();
 };
 #endif // MAINWINDOW_H

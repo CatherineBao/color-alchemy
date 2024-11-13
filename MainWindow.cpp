@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "Model.h"
 #include "Canvas.h"
+#include <QColorDialog>
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
@@ -32,6 +33,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             this, &MainWindow::handleCanvasResize);
     connect(ui->canvasHeightBox, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &MainWindow::handleCanvasResize);
+
+    connect(ui->colorButton, &QPushButton::clicked, this, &MainWindow::openColorPicker);
+    connect(this, &MainWindow::changeColor, canvas, &Canvas::changePenColor);
 }
 
 MainWindow::~MainWindow()
@@ -53,4 +57,15 @@ void MainWindow::handleCanvasResize() {
 
     ui->canvasWidthBox->blockSignals(false);
     ui->canvasHeightBox->blockSignals(false);
+}
+
+void MainWindow::openColorPicker(){
+
+    QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
+
+    if (color.isValid()) {
+        emit changeColor(color);
+        QString style = QString("background-color: %1;").arg(color.name());
+        ui->currentColorLabel->setStyleSheet(style);
+    }
 }
