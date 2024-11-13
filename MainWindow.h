@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidget>
 #include "Model.h"
 #include "Canvas.h"
 
@@ -24,6 +25,9 @@ private:
     Canvas *canvas;
     Model& model;
 
+    void setupLayerConnections();
+    void setupFrameConnections();
+
 signals:
     void penClicked();
     void changeColor(const QColor &color);
@@ -31,5 +35,20 @@ signals:
 public slots:
     void handleCanvasResize();
     void openColorPicker();
+
+private slots:
+    void handleAddLayer();
+    void handleDeleteLayer();
+    void updateLayerDisplay();
+    void handleLayerNameEdit(QListWidgetItem* item);
+    void handleLayerVisibilityToggle(int index, bool visible);
+    void onLayerVisibilityChanged(int index);
+    void onLayerNameChanged(int index);
+
+    void handleAddFrame();
+    void handleDeleteFrame();
+    void updateFrameDisplay();
+    void handleFrameSelection(int index);
+
 };
 #endif // MAINWINDOW_H

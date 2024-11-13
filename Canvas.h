@@ -19,6 +19,29 @@ public:
     int getGridWidth() const { return gridWidth; }
     int getGridHeight() const { return gridHeight; }
 
+    struct Layer {
+        QString name;
+        QImage image;
+        bool visible = true;
+    };
+
+    void addLayer();
+    void deleteLayer(int index);
+    void setCurrentLayer(int index);
+    void setLayerVisibility(int index, bool visibility);
+    void setLayerName(int index, const QString& name);
+
+    void addFrame();
+    void deleteFrame(int index);
+    void setCurrentFrame(int index);
+
+    QImage fullImage() const;
+
+    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrame]; }
+    int getFrameCount() const { return frames.size(); }
+    int getCurrentFrame() const { return currentFrame; }
+    int getCurrentLayer() const { return currentLayer; }
+
 public slots:
     void setPen();
     void setEraser();
@@ -53,7 +76,9 @@ private:
     QColor currentPenColor = Qt::black;
     QColor backgroundColor = Qt::white;
 
-    QImage image;
+    QVector<QVector<Layer>> frames;
+    int currentFrame = 0;
+    int currentLayer = 0;
 };
 
 #endif // CANVAS_H
