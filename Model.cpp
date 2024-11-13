@@ -6,6 +6,7 @@ Model::Model(QObject *parent)
     , pixelData(16, 16, QImage::Format_ARGB32)
 {
     pixelData.fill(Qt::transparent);
+    frames.resize(1);
     addLayer();
 }
 
@@ -68,8 +69,13 @@ bool Model:: isLayerVisible(int index) const {
 }
 
 void Model::addFrame() {
-
+    Frame newFrame;
+    newFrame.layers = frames[currentFrame].layers;
+    frames.insert(currentFrame + 1, newFrame);
+    setCurrentFrame(currentFrame + 1);
+    emit framesChanged();
 }
+
 void Model::deleteFrame(int index) {
     if(frames.size() > 1 && index >= 0 && index < frames.size()) {
         frames.remove(index);
@@ -78,3 +84,9 @@ void Model::deleteFrame(int index) {
     }
 }
 
+void Model::setCurrentFrame(int index) {
+    if(index >= 0 && index < frames.size() && index != currentFrame) {
+        currentFrame = index;
+        emit currentFrameChanged(index);
+    }
+}
