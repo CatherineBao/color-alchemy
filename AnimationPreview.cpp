@@ -1,11 +1,11 @@
 ///
 /// Style checked by:
 ///
-#include "AnimationPreview.h"
-#include "Model.h"
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
+#include "AnimationPreview.h"
+#include "Model.h"
 
 AnimationPreview::AnimationPreview(QWidget *parent)
     : QWidget{parent}
