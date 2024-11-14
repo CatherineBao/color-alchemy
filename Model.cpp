@@ -111,7 +111,6 @@ void Model::saveJSON() {
     for (const auto& frameList : frames) {
         QJsonArray framesArray;
         for(const auto& frame : frameList){
-            qDebug() << frame.image;
             framesArray.append(frame.toJson());
         }
         upperArray.append(framesArray);
@@ -121,6 +120,7 @@ void Model::saveJSON() {
     rootObj["frames"] = upperArray;
     rootObj["canvas_width"] = canvasWidth;
     rootObj["canvas_height"] = canvasHeight;
+
     QJsonDocument saveDoc(rootObj);
 
     QFile saveFile(fileName);
@@ -153,6 +153,9 @@ void Model::loadJSON() {
 
     canvasWidth = rootObj["canvas_width"].toInt(canvasWidth);
     canvasHeight = rootObj["canvas_height"].toInt(canvasHeight);
+
+    emit setSize(canvasWidth,canvasHeight);
+    emit resize();
 
     QJsonArray upperArray = rootObj["frames"].toArray();
     for (const QJsonValue& frameListValue : upperArray) {
@@ -213,9 +216,6 @@ void Model::drawPixel(const QPoint &pos) {
         painter.setBrush(currentToolColor);
     }
 
-    qDebug() << x;
-    qDebug() << y;
-
     painter.drawRect(x, y, drawWidth, drawWidth);
 
     updateCanvas();
@@ -258,7 +258,6 @@ void Model::updateEverything() {
 }
 
 void Model::updateCanvas() {
-    qInfo() << "update canvas: " << currentFrameIndex;
     QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 

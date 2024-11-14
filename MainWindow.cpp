@@ -46,6 +46,10 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
     connect(ui->resizeButton, &QPushButton::clicked, this, &MainWindow::resizeCanvas);
 
+    connect(&model, &Model::resize, this, &MainWindow::resizeCanvas);
+    connect(&model, &Model::setSize, this, &MainWindow::setSize);
+
+
     setupLayerConnections();
     setupFrameConnections();
 
@@ -173,6 +177,10 @@ void MainWindow::updateFrameDisplay() {
     ui->deleteFrameButton->setEnabled(model.getFrameCount() > 1);
 }
 
+void MainWindow::setSize(int width, int height){
+    ui->widthSpinBox->setValue(width);
+    ui->heightSpinBox->setValue(height);
+}
 
 void MainWindow::resizeCanvas()
 {

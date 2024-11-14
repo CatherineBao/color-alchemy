@@ -144,5 +144,12 @@ private slots:
     ///
     void resizeCanvas();
 
+    ///
+    /// \brief setSize
+    /// \param width
+    /// \param height
+    ///
+    void setSize(int width, int height);
+
 };
 #endif // MAINWINDOW_H

@@ -209,6 +209,8 @@ signals:
     void currentLayerChanged(int index);
     void framesChanged();
     void currentFrameChanged(int index);
+    void resize();
+    void setSize(int width, int height);
 
 private:
     ///
