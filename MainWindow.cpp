@@ -54,6 +54,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         bool visible = item->checkState() == Qt::Checked;
         handleLayerVisibilityToggle(row, visible);
         });
+
+    connect(ui->saveButton, &QPushButton::clicked, this, [=]() { this->model.save();
+    });
 }
 
 MainWindow::~MainWindow()

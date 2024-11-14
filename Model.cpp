@@ -1,5 +1,9 @@
 #include "Model.h"
 #include <QPainter>
+#include <QFileDialog>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QMessageBox>
 
 Model::Model(QObject *parent)
     : QObject{parent}
@@ -105,4 +109,32 @@ void Model::setCurrentFrame(int index) {
     if(index >= 0 && index < frames.size() && index != currentFrame) {
         currentFrame = index;
     }
+}
+
+void Model::save(){
+    QString fileName = QFileDialog::getSaveFileName(nullptr, "Save Sprites", "", "JSON Files (*.json)");
+    if (fileName.isEmpty()) return;
+
+    QJsonArray upperArray;
+
+    for (const auto& frameList : frames) {
+        QJsonArray framesArray;
+        for(const auto& frame : frameList){
+            framesArray.append(frame.toJson());
+        }
+        upperArray.append(framesArray);
+    }
+
+    QJsonObject rootObj;
+    rootObj["sprites"] = upperArray;
+    QJsonDocument saveDoc(rootObj);
+
+    QFile saveFile(fileName);
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        QMessageBox::warning(nullptr, "Error", "Couldn't open save file.");
+        return;
+    }
+
+    saveFile.write(saveDoc.toJson());
+    saveFile.close();
 }
