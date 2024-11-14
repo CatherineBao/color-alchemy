@@ -257,7 +257,6 @@ private:
     int totalLayersCreated = 0;
 
     void updateCanvas();
-    void updateEverything();
 
     void renderFrameInternal(QImage& out, int index, qreal opacity) const;
     ///

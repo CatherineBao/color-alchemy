@@ -108,7 +108,7 @@ void Model::deleteFrame(int index) {
 }
 
 void Model::setCurrentFrame(int index) {
-    if(index >= 0 && index < frames.size() && index != currentFrameIndex)
+    if (index >= 0 && index < frames.size() && index != currentFrameIndex) {
         currentFrameIndex = index;
         updateCanvas();
     }
@@ -181,12 +181,6 @@ void Model::renderFrameInternal(QImage& out, int index, qreal opacity) const {
     if (index > frames.size() - 1 || index < 0) {
         return;
     }
-QImage Model::renderFrame(int index) const {
-    QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
-    result.fill(Qt::transparent);
-    QPainter painter(&result);
-
-    if (index > frames.size() - 1 || index < 0) return result;
 
     QPainter painter(&out);
     painter.setOpacity(opacity);
@@ -197,7 +191,7 @@ QImage Model::renderFrame(int index) const {
 }
 
 QImage Model::renderFrame(int index) const {
-    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
+    QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
     renderFrameInternal(result, index, 1.0);
     return result;
@@ -273,7 +267,7 @@ void Model::updateEverything() {
 void Model::updateCanvas() {
     // emit redrawCanvas(renderCurrentFrame());
     qInfo() << "update canvas: " << currentFrameIndex;
-    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
+    QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 
     if (currentFrameIndex > 1) {
