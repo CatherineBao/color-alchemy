@@ -1,5 +1,5 @@
 ///
-/// Style checked by:
+/// Style checked by: Mitch Briles
 ///
 #ifndef ANIMATIONPREVIEW_H
 #define ANIMATIONPREVIEW_H
