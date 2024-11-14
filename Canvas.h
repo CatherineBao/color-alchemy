@@ -50,6 +50,9 @@ public slots:
     void changeEraserSize(int size);
     void changePenColor(const QColor &color);
 
+signals:
+    void currentLayerChanged(int index);
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -80,6 +83,7 @@ private:
     QVector<QVector<Layer>> frames;
     int currentFrame = 0;
     int currentLayer = 0;
+    int totalLayersCreated = 0;
 };
 
 #endif // CANVAS_H

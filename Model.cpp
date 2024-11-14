@@ -25,55 +25,72 @@ void Model::resizePixelGrid(int width, int height) {
 
 void Model::addLayer() {
     Layer newLayer;
-    newLayer.name = QString("Layer %1").arg(layers.size() + 1);
+    totalLayersCreated++;
+    newLayer.name = QString("Layer %1").arg(totalLayersCreated);
     newLayer.visible = true;
-    layers.append(newLayer);
-    currentLayer = layers.size() - 1;
+    frames[currentFrame].append(newLayer);
+    currentLayer = frames[currentFrame].size() - 1;
     emit layersChanged();
 }
 
 void Model::deleteLayer(int index) {
-    if(layers.size() > 1 && index >= 0 && index < layers.size()) {
-        layers.remove(index);
-        currentLayer = qMin(currentLayer, layers.size() - 1);
+    if(frames[currentFrame].size() > 1 && index >= 0 && index < frames[currentFrame].size()) {
+        QString layerName = frames[currentFrame][index].name;
+        frames[currentFrame].remove(index);
+        currentLayer = qMin(currentLayer, frames[currentFrame].size() - 1);
         emit layersChanged();
     }
 }
 
+void Model::setCurrentLayer(int index) {
+    if(index >= 0 && index < frames[currentFrame].size() && index != currentLayer) {
+        currentLayer = index;
+        emit currentLayerChanged(index);
+    }
+}
+
 QString Model::getLayerName(int index) const {
-    if(index >= 0 && index < layers.size()) {
-        return layers[index].name;
+    if(index >= 0 && index < frames[currentFrame].size()) {
+        return frames[currentFrame][index].name;
     }
     return QString();
 }
 
 void Model::setLayerName(int index, const QString& name) {
-    if(index >= 0 && index < layers.size()) {
-        layers[index].name = name;
+    if(index >= 0 && index < frames[currentFrame].size()) {
+        frames[currentFrame][index].name = name;
         emit layerNameChanged(index);
     }
 }
 
 void Model::setLayerVisibility(int index, bool visible) {
-    if(index >= 0 && index < layers.size()) {
-        layers[index].visible = visible;
+    if(index >= 0 && index < frames[currentFrame].size()) {
+        frames[currentFrame][index].visible = visible;
         emit layerVisibilityChanged(index);
     }
 }
 
 bool Model:: isLayerVisible(int index) const {
-    if(index >= 0 && index < layers.size()) {
-        return layers[index].visible;
+    if(index >= 0 && index < frames[currentFrame].size()) {
+        return frames[currentFrame][index].visible;
     }
     return false;
 }
 
 void Model::addFrame() {
-    Frame newFrame;
-    newFrame.layers = frames[currentFrame].layers;
+    QVector<Layer> newFrame;
+    for(const Layer& layer : frames[currentFrame]) {
+        Layer newLayer;
+        newLayer.name = layer.name;
+        newLayer.visible = layer.visible;
+        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
+        newLayer.image = layer.image.copy();
+        newFrame.append(newLayer);
+    }
     frames.insert(currentFrame + 1, newFrame);
     setCurrentFrame(currentFrame + 1);
     emit framesChanged();
+    emit currentFrameChanged(currentFrame);
 }
 
 void Model::deleteFrame(int index) {
@@ -87,6 +104,5 @@ void Model::deleteFrame(int index) {
 void Model::setCurrentFrame(int index) {
     if(index >= 0 && index < frames.size() && index != currentFrame) {
         currentFrame = index;
-        emit currentFrameChanged(index);
     }
 }

@@ -91,20 +91,39 @@ void MainWindow::setupLayerConnections() {
     connect(ui->deleteLayerButton, &QPushButton::clicked, this, &MainWindow::handleDeleteLayer);
     connect(&model, &Model::layersChanged, this, &MainWindow::updateLayerDisplay);
 
+    connect(&model, &Model::currentLayerChanged, this, &MainWindow::syncLayerSelection);
+    connect(canvas, &Canvas::currentLayerChanged, this, &MainWindow::syncLayerSelection);
+
     connect(ui->layerList, &QListWidget::itemChanged, this, &MainWindow::handleLayerNameEdit);
     connect(&model, &Model::layerVisibilityChanged, this, &MainWindow::onLayerVisibilityChanged);
     connect(&model, &Model::layerNameChanged, this, &MainWindow::onLayerNameChanged);
+
+    connect(ui->layerList, &QListWidget::currentRowChanged, [this](int row) {
+        if(row >= 0) {
+            model.setCurrentLayer(row);
+            canvas->setCurrentLayer(row);
+        }
+    });
+}
+
+void MainWindow::syncLayerSelection() {
+    int currentLayer = canvas->getCurrentLayer();
+    if(ui->layerList->currentRow() != currentLayer) {
+        ui->layerList->setCurrentRow(currentLayer);
+    }
 }
 
 void MainWindow::handleAddLayer() {
     model.addLayer();
     canvas->addLayer();
+    updateLayerDisplay();
 }
 
 void MainWindow::handleDeleteLayer() {
     int currentLayer = canvas->getCurrentLayer();
     model.deleteLayer(currentLayer);
     canvas->deleteLayer(currentLayer);
+    updateLayerDisplay();
 }
 
 void MainWindow::updateLayerDisplay() {
@@ -158,18 +177,26 @@ void MainWindow::setupFrameConnections() {
 }
 
 void MainWindow::handleAddFrame() {
+    int oldFrame = canvas->getCurrentFrame();
     model.addFrame();
+    canvas->setCurrentFrame(oldFrame);
     canvas->addFrame();
+    updateFrameDisplay();
+    updateLayerDisplay();
 }
 
 void MainWindow::handleDeleteFrame() {
     int currentFrame = model.getCurrentFrame();
     model.deleteFrame(currentFrame);
     canvas->deleteFrame(currentFrame);
+    updateFrameDisplay();
+    updateLayerDisplay();
 }
 
 void MainWindow::handleFrameSelection(int index) {
     model.setCurrentFrame(index);
+    canvas->setCurrentFrame(index);
+    updateLayerDisplay();
 }
 
 void MainWindow::updateFrameDisplay() {
