@@ -188,7 +188,7 @@ void MainWindow::resizeCanvas()
     int canvasHeight = height * 10 + 1;
 
     ui->editor = newCanvas;
-    ui->editor->setGeometry(QRect(420, 90, canvasWidth, canvasHeight));
+    ui->editor->setGeometry(QRect(456 - width * 4, 90, canvasWidth, canvasHeight));
     ui->editor->show();
 
     ui->animationPreview->resizeWindow(canvasWidth, canvasHeight);
