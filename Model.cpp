@@ -136,7 +136,6 @@ void Model::saveJSON() {
     saveFile.close();
 }
 
-
 void Model::loadJSON() {
     QVector<QVector<Model::Layer>> layersData;
 

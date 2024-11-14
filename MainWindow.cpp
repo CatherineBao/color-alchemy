@@ -1,5 +1,5 @@
 ///
-/// Style checked by:
+/// Style checked by: Tucker Bolick
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Model.h"
@@ -56,7 +56,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::openColorPicker() {
-
     QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
     if (color.isValid()) {

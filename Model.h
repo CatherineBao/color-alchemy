@@ -25,7 +25,6 @@ public:
         }
 
         QJsonObject toJson() const {
-
             QJsonObject jsonObj;
             jsonObj["name"] = name;
 
@@ -36,7 +35,6 @@ public:
             jsonObj["image"] = QString::fromLatin1(byteArray.toBase64());
             jsonObj["visible"] = visible;
             return jsonObj;
-
         }
 
         static Layer fromJson(const QJsonObject& jsonObj) {
@@ -50,7 +48,6 @@ public:
             layer.visible = jsonObj["visible"].toBool();
             return layer;
         }
-
     };
 
     void addLayer();
