@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
-    <height>538</height>
+    <width>1173</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,7 +100,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="Canvas" name="editor" native="true">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>420</x>
       <y>90</y>
       <width>361</width>
       <height>361</height>
@@ -112,7 +112,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
      <rect>
       <x>170</x>
       <y>110</y>
-      <width>161</width>
+      <width>191</width>
       <height>221</height>
      </rect>
     </property>
@@ -145,9 +145,9 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frameInfo">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>272</y>
-      <width>271</width>
+      <x>830</x>
+      <y>302</y>
+      <width>311</width>
       <height>81</height>
      </rect>
     </property>
@@ -189,7 +189,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>131</width>
+      <width>141</width>
       <height>321</height>
      </rect>
     </property>
@@ -251,10 +251,10 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>20</y>
-      <width>271</width>
-      <height>241</height>
+      <x>830</x>
+      <y>30</y>
+      <width>311</width>
+      <height>261</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -302,10 +302,10 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>360</y>
-      <width>271</width>
-      <height>151</height>
+      <x>830</x>
+      <y>390</y>
+      <width>311</width>
+      <height>171</height>
      </rect>
     </property>
     <property name="styleSheet">
