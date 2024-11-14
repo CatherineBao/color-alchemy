@@ -1,7 +1,8 @@
-#include "MainWindow.h"
-#include "Canvas.h"
-
+///
+/// Style checked by: Jonas Regehr
+///
 #include <QApplication>
+#include "MainWindow.h"
 
 int main(int argc, char *argv[])
 {

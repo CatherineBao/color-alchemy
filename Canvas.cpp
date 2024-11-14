@@ -1,6 +1,9 @@
-#include "Canvas.h"
+///
+/// Style checked by:
+///
 #include <QMouseEvent>
 #include <QPainter>
+#include "Canvas.h"
 
 Canvas::Canvas(QWidget *parent, int width, int height)
     : QWidget(parent)

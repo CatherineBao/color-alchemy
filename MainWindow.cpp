@@ -1,9 +1,11 @@
+///
+/// Style checked by: Tucker Bolick
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Model.h"
 #include "Canvas.h"
 #include "AnimationPreview.h"
-#include <QColorDialog>
+
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
@@ -14,11 +16,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     canvas = qobject_cast<Canvas*>(ui->editor);
     animationPreview = qobject_cast<AnimationPreview*>(ui->animationPreview);
     animationPreview->setModel(&model);
-
-    setupLayerConnections();
-    setupFrameConnections();
-    updateLayerDisplay();
-    updateFrameDisplay();
 
     connect(ui->penToolButton, &QPushButton::clicked, &model, &Model::setPen);
     connect(ui->penToolButton, &QPushButton::clicked, &model, [this](){ui->eraserToolButton->setChecked(false);});
@@ -48,15 +45,18 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
     connect(ui->resizeButton, &QPushButton::clicked, this, &MainWindow::resizeCanvas);
 
+    setupLayerConnections();
+    setupFrameConnections();
+
+    updateLayerDisplay();
+    updateFrameDisplay();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::openColorPicker(){
-
+void MainWindow::openColorPicker() {
     QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
     if (color.isValid()) {
@@ -78,17 +78,13 @@ void MainWindow::setupLayerConnections() {
     connect(&model, &Model::layerNameChanged, this, &MainWindow::onLayerNameChanged);
 
     connect(ui->layerList, &QListWidget::currentRowChanged, this, [this](int row) {
-        if(row >= 0) {
-            model.setCurrentLayer(row);
-        }
+        if(row >= 0) model.setCurrentLayer(row);
     });
 }
 
 void MainWindow::syncLayerSelection() {
     int currentLayer = model.getCurrentLayer();
-    if(ui->layerList->currentRow() != currentLayer) {
-        ui->layerList->setCurrentRow(currentLayer);
-    }
+    if(ui->layerList->currentRow() != currentLayer) ui->layerList->setCurrentRow(currentLayer);
 }
 
 void MainWindow::handleAddLayer() {
@@ -135,9 +131,7 @@ void MainWindow::onLayerVisibilityChanged(int index) {
 
 void MainWindow::onLayerNameChanged(int index) {
     QListWidgetItem* item = ui->layerList->item(index);
-    if(item) {
-        item->setText(model.getLayerName(index));
-    }
+    if(item) item->setText(model.getLayerName(index));
 }
 
 void MainWindow::setupFrameConnections() {
@@ -174,9 +168,7 @@ void MainWindow::updateFrameDisplay() {
     ui->frameSpinBox->setRange(0, model.getFrameCount() - 1);
     ui->frameSpinBox->setValue(model.getCurrentFrame());
     ui->frameSpinBox->blockSignals(false);
-
     ui->frameCountLabel->setText(QString("Total Frames: %1").arg(model.getFrameCount() - 1));
-
     ui->deleteFrameButton->setEnabled(model.getFrameCount() > 1);
 }
 

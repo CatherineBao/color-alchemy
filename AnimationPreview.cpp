@@ -1,8 +1,11 @@
-#include "AnimationPreview.h"
-#include "Model.h"
+///
+/// Style checked by:
+///
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
+#include "AnimationPreview.h"
+#include "Model.h"
 
 AnimationPreview::AnimationPreview(QWidget *parent)
     : QWidget{parent}
@@ -17,9 +20,7 @@ AnimationPreview::AnimationPreview(QWidget *parent)
 
 void AnimationPreview::nextFrame() {
     int frameCount = model->getFrameCount();
-    if (frameCount == 0) {
-        return;
-    }
+    if (frameCount == 0) return;
 
     frameIndex = (frameIndex + 1) % frameCount;
     frame = model->renderFrame(frameIndex);
