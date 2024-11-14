@@ -68,7 +68,7 @@ void Model::setLayerVisibility(int index, bool visible) {
     }
 }
 
-bool Model:: isLayerVisible(int index) const {
+bool Model::isLayerVisible(int index) const {
     if(index >= 0 && index < frames[currentFrameIndex].size())
         return frames[currentFrameIndex][index].visible;
 
@@ -108,7 +108,7 @@ void Model::setCurrentFrame(int index) {
         currentFrameIndex = index;
 }
 
-void Model::saveJSON(){
+void Model::saveJSON() {
     QString fileName = QFileDialog::getSaveFileName(nullptr, "Save Sprites", "", "JSON Files (*.json)");
     if (fileName.isEmpty()) return;
 
@@ -136,7 +136,6 @@ void Model::saveJSON(){
     saveFile.write(saveDoc.toJson());
     saveFile.close();
 }
-
 
 void Model::loadJSON() {
     QVector<QVector<Model::Layer>> layersData;
@@ -166,10 +165,8 @@ void Model::loadJSON() {
             Model::Layer layer = Model::Layer::fromJson(frameObj);
             layerList.append(layer);
         }
-
         layersData.append(layerList);
     }
-
     frames = layersData;
     emit redrawCanvas(renderCurrentFrame());
 }
@@ -192,8 +189,7 @@ QImage Model::renderCurrentFrame() const {
     return renderFrame(currentFrameIndex);
 }
 
-void Model::drawPixel(const QPoint &pos)
-{
+void Model::drawPixel(const QPoint &pos) {
     int x = pos.x() / PIXEL_SIZE;
     int y = pos.y() / PIXEL_SIZE;
 
@@ -240,7 +236,7 @@ void Model::changeEraserSize(int size) {
     if (!isPen) currentToolWidth = size;
 }
 
-void Model::changePenColor(const QColor &color){
+void Model::changePenColor(const QColor &color) {
     currentPenColor = color;
     this->setPen();
 }
