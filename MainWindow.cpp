@@ -43,7 +43,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
             this, &MainWindow::handleCanvasResize);
 
     connect(ui->colorButton, &QPushButton::clicked, this, &MainWindow::openColorPicker);
-    connect(this, &MainWindow::changeColor, canvas, &Canvas::changePenColor);
+    connect(this, &MainWindow::colorChanged, canvas, &Canvas::changePenColor);
 
     connect(ui->canvasWidthBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::handleCanvasResize);
     connect(ui->canvasHeightBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::handleCanvasResize);
@@ -87,7 +87,7 @@ void MainWindow::openColorPicker(){
     QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
     if (color.isValid()) {
-        emit changeColor(color);
+        emit colorChanged(color);
         QString style = QString("background-color: %1;").arg(color.name());
         ui->currentColorLabel->setStyleSheet(style);
     }
