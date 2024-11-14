@@ -1,5 +1,6 @@
 ///
 /// Style checked by:
+///
 #include "Canvas.h"
 #include <QMouseEvent>
 #include <QPainter>

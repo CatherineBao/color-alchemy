@@ -1,5 +1,6 @@
 ///
 /// Style checked by: Jonas Regehr
+///
 #include "MainWindow.h"
 #include <QApplication>
 

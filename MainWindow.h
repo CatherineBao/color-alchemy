@@ -92,48 +92,47 @@ private slots:
     void updateLayerDisplay();
 
     ///
-    /// \brief handleLayerNameEdit -
-    /// \param item
+    /// \brief handleLayerNameEdit - changes the name of a layer
     ///
     void handleLayerNameEdit(QListWidgetItem* item);
 
     ///
-    /// \brief handleLayerVisibilityToggle
-    /// \param index
-    /// \param visible
+    /// \brief handleLayerVisibilityToggle - toggles the visibility of a layer
+    /// \param index - the index of the layer to toggle
+    /// \param visible - true if visible, false otherwise
     ///
     void handleLayerVisibilityToggle(int index, bool visible);
 
     ///
-    /// \brief onLayerVisibilityChanged
-    /// \param index
+    /// \brief onLayerVisibilityChanged - toggles the checkbox for the visiblity of a layer
+    /// \param index - the index of the layer to toggle
     ///
     void onLayerVisibilityChanged(int index);
 
     ///
-    /// \brief onLayerNameChanged
-    /// \param index
+    /// \brief onLayerNameChanged - changes the name of the layer in the ui
+    /// \param index - the index of the layer to change
     ///
     void onLayerNameChanged(int index);
 
     ///
-    /// \brief handleAddFrame
+    /// \brief handleAddFrame - adds a new frame to the model and updates the display
     ///
     void handleAddFrame();
 
     ///
-    /// \brief handleDeleteFrame
+    /// \brief handleDeleteFrame - deletes a frame from the model and updates the display
     ///
     void handleDeleteFrame();
 
     ///
-    /// \brief updateFrameDisplay
+    /// \brief updateFrameDisplay - refreshes the frame display
     ///
     void updateFrameDisplay();
 
     ///
-    /// \brief handleFrameSelection
-    /// \param index
+    /// \brief handleFrameSelection - toggles which frame is selected
+    /// \param index - the index of the frame to select
     ///
     void handleFrameSelection(int index);
 

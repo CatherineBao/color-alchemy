@@ -1,11 +1,13 @@
 ///
 /// Style checked by:
+///
+#include <QColorDialog>
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Model.h"
 #include "Canvas.h"
 #include "AnimationPreview.h"
-#include <QColorDialog>
+
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)

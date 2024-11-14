@@ -1,11 +1,12 @@
 ///
 /// Style checked by: Jonas Regehr
-#include "Model.h"
-#include <QPainter>
+///
 #include <QFileDialog>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include "Model.h"
+#include <QPainter>
 
 Model::Model(QObject *parent)
     : QObject{parent}
