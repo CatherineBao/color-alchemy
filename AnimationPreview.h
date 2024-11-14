@@ -3,22 +3,22 @@
 
 #include <QWidget>
 #include <QTimer>
-#include <Canvas.h>
+#include "Model.h"
 #include <QPaintEvent>
 
 class AnimationPreview : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AnimationPreview(QWidget *parent = nullptr, Canvas* canvas = nullptr);
+    explicit AnimationPreview(QWidget *parent = nullptr);
 
-    void setCanvas(Canvas* _canvas);
+    void setModel(Model* _model);
 
 private:
     QTimer* timer;
     int frameIndex;
     QImage frame;
-    Canvas* canvas;
+    Model* model;
     QSize windowSize;
 
     void nextFrame();

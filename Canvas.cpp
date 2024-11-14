@@ -4,265 +4,49 @@
 
 Canvas::Canvas(QWidget *parent)
     : QWidget(parent)
+    , frame(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32)
 {
     setAttribute(Qt::WA_StaticContents);
-
-    frames.resize(1);
-    frames[0].resize(1);
-    frames[0][0].name = "Layer 1";
-    initializeImage(360, 360);
-}
-
-void Canvas::initializeImage(int width, int height) {
-    frames[currentFrameIndex][currentLayerIndex].image = QImage(width, height, QImage::Format_ARGB32);
-    frames[currentFrameIndex][currentLayerIndex].image.fill(Qt::transparent);
-
-    gridWidth = width / pixelSize;
-    gridHeight = height / pixelSize;
-
-    calculatePixelSize();
-    setFixedSize(width, height);
-
-    update();
+    frame.fill(Qt::transparent);
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         drawing = true;
-        drawPixel(event->pos());
+        emit pixelChanged(event->pos());
     }
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
     if (drawing)
-        drawPixel(event->pos());
+        emit pixelChanged(event->pos());
 }
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && drawing) {
-        drawPixel(event->pos());
+        emit pixelChanged(event->pos());
         drawing = false;
     }
-}
-
-void Canvas::drawPixel(const QPoint &pos)
-{
-    int x = pos.x() / pixelSize;
-    int y = pos.y() / pixelSize;
-
-    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
-        return;
-
-    QPainter painter(&frames[currentFrameIndex][currentLayerIndex].image);
-    painter.setPen(Qt::NoPen);
-
-    int scaledX = x * pixelSize;
-    int scaledY = y * pixelSize;
-    int drawWidth = qMin(pixelSize * currentToolWidth, pixelSize * gridWidth - x);
-
-    if (!isPen) {
-        painter.setCompositionMode(QPainter::CompositionMode_Clear);
-        painter.setBrush(Qt::transparent);
-    } else {
-        painter.setBrush(currentToolColor);
-    }
-
-    painter.drawRect(scaledX, scaledY, drawWidth, drawWidth);
-
-    update(QRect(scaledX, scaledY, drawWidth, drawWidth));
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    painter.drawImage(dirtyRect, renderCurrentFrame(), dirtyRect);
+    painter.drawImage(dirtyRect, frame, frame.rect());
 
     // draw grids
     painter.setPen(Qt::gray);
-    for (int i = 0; i <= gridWidth; ++i)
-        painter.drawLine(i * pixelSize, 0, i * pixelSize, gridHeight * pixelSize);
-    for (int i = 0; i <= gridHeight; ++i)
-        painter.drawLine(0, i * pixelSize, gridWidth * pixelSize, i * pixelSize);
+    for (int i = 0; i <= GRID_WIDTH; ++i)
+        painter.drawLine(i * PIXEL_SIZE, 0, i * PIXEL_SIZE, GRID_HEIGHT * PIXEL_SIZE);
+    for (int i = 0; i <= GRID_HEIGHT; ++i)
+        painter.drawLine(0, i * PIXEL_SIZE, GRID_WIDTH * PIXEL_SIZE, i * PIXEL_SIZE);
 }
 
-void Canvas::setPen() {
-    isPen = true;
-    currentToolColor = currentPenColor;
-    currentToolWidth = currentPenWidth;
-}
-
-void Canvas::setEraser() {
-    isPen = false;
-    currentToolColor = Qt::transparent;
-    currentToolWidth = currentEraserWidth;
-}
-
-void Canvas::changePenSize(int size) {
-    currentPenWidth = size;
-
-    if (isPen)
-        currentToolWidth = size;
-}
-
-void Canvas::changeEraserSize(int size) {
-    currentEraserWidth = size;
-
-    if (!isPen)
-        currentToolWidth = size;
-}
-
-void Canvas::resizeGrid(int width, int height) {
-    if (width <= 0 || height <= 0) return;
-    emit gridResized(width, height);
-
-    QImage oldImage = renderCurrentFrame();
-    int oldWidth = gridWidth;
-    int oldHeight = gridHeight;
-    int oldPixelSize = pixelSize;
-
-
-    gridWidth = width;
-    gridHeight = height;
-    calculatePixelSize();
-
-    QImage newImage(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
-
-    if(!oldImage.isNull()) {
-        QPainter painter(&newImage);
-        painter.setPen(Qt::NoPen);
-
-        for(int x = 0; x < oldWidth; x++) {
-            for(int y = 0; y < oldHeight; y++) {
-                if(x < gridWidth && y < gridHeight) {
-                    QColor pixelColor = oldImage.pixelColor(x * oldPixelSize, y * oldPixelSize);
-
-                    if(pixelColor != backgroundColor) {
-                        painter.setBrush(pixelColor);
-                        painter.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-                    }
-                }
-            }
-        }
-    }
-
-    frames[currentFrameIndex][currentLayerIndex].image = newImage;
-    setFixedSize(gridWidth * pixelSize, gridHeight * pixelSize);
+void Canvas::onRedraw(QImage newFrame) {
+    frame = newFrame;
     update();
-}
-
-void Canvas::calculatePixelSize() {
-    int widgetWidth = 360;
-    int widgetHeight = 360;
-
-    double horizontalSize = static_cast<double>(widgetWidth) / gridWidth;
-    double verticalSize = static_cast<double>(widgetHeight) / gridHeight;
-
-    pixelSize = static_cast<int>(floor(qMin(horizontalSize, verticalSize)));
-    pixelSize = qMax(pixelSize, MIN_PIXEL_SIZE);
-}
-
-void Canvas::changePenColor(const QColor &color){
-    currentPenColor = color;
-    this->setPen();
-}
-
-void Canvas::addLayer() {
-    Layer newLayer;
-    totalLayersCreated++;
-    newLayer.name = QString("Layer %1").arg(totalLayersCreated);
-    newLayer.image = QImage(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
-    newLayer.image.fill(Qt::transparent);
-    newLayer.visible = true;
-
-    frames[currentFrameIndex].append(newLayer);
-    currentLayerIndex = frames[currentFrameIndex].size() - 1;
-    update();
-}
-
-void Canvas::deleteLayer(int index) {
-    if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
-        QString layerName = frames[currentFrameIndex][index].name;
-        frames[currentFrameIndex].remove(index);
-        currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
-        update();
-    }
-}
-
-void Canvas::setCurrentLayer(int index) {
-    if(index >= 0 && index < frames[currentFrameIndex].size() && index != currentLayerIndex) {
-        currentLayerIndex = index;
-        emit currentLayerChanged(index);
-    }
-}
-
-void Canvas::setLayerVisibility(int index, bool visible) {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
-        frames[currentFrameIndex][index].visible = visible;
-        update();
-    }
-}
-
-void Canvas::setLayerName(int index, const QString& name) {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
-        frames[currentFrameIndex][index].name = name;
-    }
-}
-
-void Canvas::addFrame() {
-    QVector<Layer> newFrame;
-
-    for(const Layer& layer : frames[currentFrameIndex]) {
-        Layer newLayer;
-        newLayer.name = layer.name;
-        newLayer.visible = layer.visible;
-        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
-        newLayer.image = layer.image.copy();
-        newFrame.append(newLayer);
-    }
-    frames.insert(currentFrameIndex + 1, newFrame);
-    currentFrameIndex++;
-    update();
-}
-
-void Canvas::deleteFrame(int index) {
-    if(frames.size() > 1 && index >= 0 && index < frames.size()) {
-        frames.remove(index);
-        currentFrameIndex = qMin(currentFrameIndex, frames.size() - 1);
-        update();
-    }
-}
-
-void Canvas::setCurrentFrame(int index) {
-    if(index >= 0 && index < frames.size() && index != currentFrameIndex) {
-        currentFrameIndex = index;
-        currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
-        emit currentLayerChanged(currentLayerIndex);
-        update();
-    }
-}
-
-QImage Canvas::renderFrame(int index) const {
-    QImage result(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
-    result.fill(Qt::transparent);
-    QPainter painter(&result);
-
-    if (index > frames.size() - 1 || index < 0) {
-        return result;
-    }
-
-    for(const Layer& layer : frames[index]) {
-        if(layer.visible) {
-            painter.drawImage(0, 0, layer.image);
-        }
-    }
-
-    return result;
-}
-
-QImage Canvas::renderCurrentFrame() const {
-    return renderFrame(currentFrameIndex);
 }

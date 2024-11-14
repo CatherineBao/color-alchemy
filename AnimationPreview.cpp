@@ -1,13 +1,13 @@
 #include "AnimationPreview.h"
-#include "Canvas.h"
+#include "Model.h"
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
 
-AnimationPreview::AnimationPreview(QWidget *parent, Canvas* canvas)
+AnimationPreview::AnimationPreview(QWidget *parent)
     : QWidget{parent}
     , frameIndex(0)
-    , canvas(canvas)
+    , model(nullptr)
     , windowSize(209, 209)
 {
     timer = new QTimer(this);
@@ -16,13 +16,13 @@ AnimationPreview::AnimationPreview(QWidget *parent, Canvas* canvas)
 }
 
 void AnimationPreview::nextFrame() {
-    int frameCount = canvas->getFrameCount();
+    int frameCount = model->getFrameCount();
     if (frameCount == 0) {
         return;
     }
 
     frameIndex = (frameIndex + 1) % frameCount;
-    frame = canvas->renderFrame(frameIndex);
+    frame = model->renderFrame(frameIndex);
 
     update();
 }
@@ -40,8 +40,8 @@ void AnimationPreview::updateFramerate(int fps) {
     timer->setInterval(1000 / fps);
 }
 
-void AnimationPreview::setCanvas(Canvas* _canvas) {
-    canvas = _canvas;
+void AnimationPreview::setModel(Model* _model) {
+    model = _model;
 }
 
 void AnimationPreview::resizeWindow(int width, int height) {

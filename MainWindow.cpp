@@ -13,74 +13,48 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     ui->setupUi(this);
     canvas = qobject_cast<Canvas*>(ui->editor);
     animationPreview = qobject_cast<AnimationPreview*>(ui->animationPreview);
-    animationPreview->setCanvas(canvas);
+    animationPreview->setModel(&model);
 
     ui->penSize->setValue(1);
     ui->eraserSize->setValue(1);
-    ui->canvasWidthBox->setValue(36);
-    ui->canvasHeightBox->setValue(36);
-
-    ui->canvasWidthBox->setRange(1, 100);
-    ui->canvasHeightBox->setRange(1, 100);
 
     setupLayerConnections();
     setupFrameConnections();
     updateLayerDisplay();
     updateFrameDisplay();
 
-    connect(ui->penToolButton, &QPushButton::clicked, canvas, &Canvas::setPen);
-    connect(ui->penToolButton, &QPushButton::clicked, canvas, [this](){ui->eraserToolButton->setChecked(false);});
-    connect(ui->eraserToolButton, &QPushButton::clicked, canvas, &Canvas::setEraser);
-    connect(ui->eraserToolButton, &QPushButton::clicked, canvas, [this](){ui->penToolButton->setChecked(false);});
+    connect(ui->penToolButton, &QPushButton::clicked, &model, &Model::setPen);
+    connect(ui->penToolButton, &QPushButton::clicked, &model, [this](){ui->eraserToolButton->setChecked(false);});
+    connect(ui->eraserToolButton, &QPushButton::clicked, &model, &Model::setEraser);
+    connect(ui->eraserToolButton, &QPushButton::clicked, &model, [this](){ui->penToolButton->setChecked(false);});
 
-    connect(ui->penSize, &QSpinBox::valueChanged, canvas, &Canvas::changePenSize);
-    connect(ui->eraserSize, &QSpinBox::valueChanged, canvas, &Canvas::changeEraserSize);
-
-    // NOTE: I'm not sure what this did... but I think I mssed it up
-    connect(ui->canvasWidthBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &MainWindow::handleCanvasResize);
-    connect(ui->canvasHeightBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &MainWindow::handleCanvasResize);
+    connect(ui->penSize, &QSpinBox::valueChanged, &model, &Model::changePenSize);
+    connect(ui->eraserSize, &QSpinBox::valueChanged, &model, &Model::changeEraserSize);
 
     connect(ui->colorButton, &QPushButton::clicked, this, &MainWindow::openColorPicker);
-    connect(this, &MainWindow::colorChanged, canvas, &Canvas::changePenColor);
+    connect(this, &MainWindow::colorChanged, &model, &Model::changePenColor);
 
-    connect(ui->canvasWidthBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::handleCanvasResize);
-    connect(ui->canvasHeightBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::handleCanvasResize);
-
-    connect(ui->layerList, &QListWidget::itemChanged,
+    connect(ui->layerList, &QListWidget::itemChanged, this,
         [this](QListWidgetItem* item) {
-        int row = ui->layerList->row(item);
-        bool visible = item->checkState() == Qt::Checked;
-        handleLayerVisibilityToggle(row, visible);
+            int row = ui->layerList->row(item);
+            bool visible = item->checkState() == Qt::Checked;
+            handleLayerVisibilityToggle(row, visible);
         });
 
-    connect(canvas, &Canvas::gridResized, animationPreview, &AnimationPreview::resizeWindow);
     connect(this, &MainWindow::frameRateChanged, animationPreview, &AnimationPreview::updateFramerate);
     connect(ui->fpsBox, QOverload<int>::of(&QSpinBox::valueChanged), animationPreview, [this](){emit frameRateChanged(ui->fpsBox->value());});
 
-    connect(ui->saveButton, &QPushButton::clicked, this, [=]() {this->model.save();});
-    connect(ui->loadButton, &QPushButton::clicked, this, [=]() {this->model.frames = this->model.load();});
+    connect(ui->saveButton, &QPushButton::clicked, this, [=]() {this->model.saveJSON();});
+    connect(ui->loadButton, &QPushButton::clicked, this, [=]() {this->model.frames = this->model.loadJSON();});
+
+    connect(canvas, &Canvas::pixelChanged, &model, &Model::drawPixel);
+    connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::handleCanvasResize() {
-    ui->canvasWidthBox->blockSignals(true);
-    ui->canvasHeightBox->blockSignals(true);
-
-    int width = ui->canvasWidthBox->value();
-    int height = ui->canvasHeightBox->value();
-
-    model.resizePixelGrid(width, height);
-    canvas->resizeGrid(width, height);
-
-    ui->canvasWidthBox->blockSignals(false);
-    ui->canvasHeightBox->blockSignals(false);
 }
 
 void MainWindow::openColorPicker(){
@@ -100,22 +74,20 @@ void MainWindow::setupLayerConnections() {
     connect(&model, &Model::layersChanged, this, &MainWindow::updateLayerDisplay);
 
     connect(&model, &Model::currentLayerChanged, this, &MainWindow::syncLayerSelection);
-    connect(canvas, &Canvas::currentLayerChanged, this, &MainWindow::syncLayerSelection);
 
     connect(ui->layerList, &QListWidget::itemChanged, this, &MainWindow::handleLayerNameEdit);
     connect(&model, &Model::layerVisibilityChanged, this, &MainWindow::onLayerVisibilityChanged);
     connect(&model, &Model::layerNameChanged, this, &MainWindow::onLayerNameChanged);
 
-    connect(ui->layerList, &QListWidget::currentRowChanged, [this](int row) {
+    connect(ui->layerList, &QListWidget::currentRowChanged, this, [this](int row) {
         if(row >= 0) {
             model.setCurrentLayer(row);
-            canvas->setCurrentLayer(row);
         }
     });
 }
 
 void MainWindow::syncLayerSelection() {
-    int currentLayer = canvas->getCurrentLayer();
+    int currentLayer = model.getCurrentLayer();
     if(ui->layerList->currentRow() != currentLayer) {
         ui->layerList->setCurrentRow(currentLayer);
     }
@@ -123,14 +95,12 @@ void MainWindow::syncLayerSelection() {
 
 void MainWindow::handleAddLayer() {
     model.addLayer();
-    canvas->addLayer();
     updateLayerDisplay();
 }
 
 void MainWindow::handleDeleteLayer() {
-    int currentLayer = canvas->getCurrentLayer();
+    int currentLayer = model.getCurrentLayer();
     model.deleteLayer(currentLayer);
-    canvas->deleteLayer(currentLayer);
     updateLayerDisplay();
 }
 
@@ -149,12 +119,10 @@ void MainWindow::updateLayerDisplay() {
 void MainWindow::handleLayerNameEdit(QListWidgetItem* item) {
     int row = ui->layerList->row(item);
     model.setLayerName(row, item->text());
-    canvas->setLayerName(row, item->text());
 }
 
 void MainWindow::handleLayerVisibilityToggle(int index, bool visible) {
     model.setLayerVisibility(index, visible);
-    canvas->setLayerVisibility(index, visible);
     canvas->update();
 }
 
@@ -180,15 +148,13 @@ void MainWindow::setupFrameConnections() {
     connect(ui->frameSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::handleFrameSelection);
 
     connect(&model, &Model::framesChanged, this, &MainWindow::updateFrameDisplay);
-    connect(&model, &Model::currentFrameChanged, canvas, &Canvas::setCurrentFrame);
     connect(&model, &Model::currentFrameChanged, this, &MainWindow::updateLayerDisplay);
 }
 
 void MainWindow::handleAddFrame() {
-    int oldFrame = canvas->getCurrentFrame();
+    int oldFrame = model.getCurrentFrame();
+    model.setCurrentFrame(oldFrame);
     model.addFrame();
-    canvas->setCurrentFrame(oldFrame);
-    canvas->addFrame();
     updateFrameDisplay();
     updateLayerDisplay();
 }
@@ -196,14 +162,12 @@ void MainWindow::handleAddFrame() {
 void MainWindow::handleDeleteFrame() {
     int currentFrame = model.getCurrentFrame();
     model.deleteFrame(currentFrame);
-    canvas->deleteFrame(currentFrame);
     updateFrameDisplay();
     updateLayerDisplay();
 }
 
 void MainWindow::handleFrameSelection(int index) {
     model.setCurrentFrame(index);
-    canvas->setCurrentFrame(index);
     updateLayerDisplay();
 }
 

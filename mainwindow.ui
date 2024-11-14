@@ -312,54 +312,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_4">
-     <item row="2" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>SIZE:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="canvasWidthBox">
-       <property name="maximum">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QSpinBox" name="canvasHeightBox">
-       <property name="maximum">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="x">
-       <property name="styleSheet">
-        <string notr="true">QFrame {
-	border: none;
-}</string>
-       </property>
-       <property name="text">
-        <string>x</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" colspan="4">
-      <widget class="QPushButton" name="loadButton">
-       <property name="text">
-        <string>Load</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" colspan="4">
-      <widget class="QPushButton" name="saveButton">
-       <property name="text">
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="4">
+     <item row="1" column="0" colspan="2">
       <widget class="QLabel" name="canvasInfoLabel">
        <property name="styleSheet">
         <string notr="true">QFrame {
@@ -368,6 +321,20 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
        </property>
        <property name="text">
         <string>CANVAS INFO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
+      <widget class="QPushButton" name="loadButton">
+       <property name="text">
+        <string>Load</string>
        </property>
       </widget>
      </item>

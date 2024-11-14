@@ -15,11 +15,12 @@ class Model : public QObject
 public:
     explicit Model(QObject *parent = nullptr);
 
-    QImage pixelData;
     struct Layer {
         QString name;
         QImage image;
-        bool visible = true;
+        bool visible;
+
+        Layer() : name(""), image(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32), visible(true) {}
 
         QJsonObject toJson() const {
 
@@ -50,8 +51,6 @@ public:
 
     };
 
-    void resizePixelGrid(int width, int height);
-
     void addLayer();
     void deleteLayer(int index);
 
@@ -60,27 +59,29 @@ public:
     bool isLayerVisible(int index) const;
     void setCurrentLayer(int index);
 
-    int getPixelWidth() const { return pixelData.width(); }
-    int getPixelHeight() const { return pixelData.height(); }
-
     QString getLayerName(int index) const;
 
     void addFrame();
     void deleteFrame(int index);
     void setCurrentFrame(int index);
 
-    int getCurrentLayer() const { return currentLayer; }
-    int getLayerCount() const { return frames[currentFrame].size(); }
-    int getCurrentFrame() const { return currentFrame; }
+    int getCurrentLayer() const { return currentLayerIndex; }
+    int getLayerCount() const { return frames[currentFrameIndex].size(); }
+    int getCurrentFrame() const { return currentFrameIndex; }
     int getFrameCount() const { return frames.size(); }
-    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrame]; }
 
-    void save();
-    QVector<QVector<Layer>> load();
+    QImage renderFrame(int index) const;
+    QImage renderCurrentFrame() const;
+
+    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrameIndex]; }
+
+    void saveJSON();
+    QVector<QVector<Layer>> loadJSON();
+
     QVector<QVector<Layer>> frames;
 
 signals:
-    void pixelGridChanged();
+    void redrawCanvas(QImage);
     void layersChanged();
     void layerVisibilityChanged(int index);
     void layerNameChanged(int index);
@@ -89,11 +90,31 @@ signals:
     void currentFrameChanged(int index);
 
 private:
-    int pixelWidth;
-    int pixelHeight;
-    int currentFrame = 0;
-    int currentLayer = 0;
+    const int PIXEL_SIZE = 10;
+
+    static const int GRID_WIDTH = 36;
+    static const int GRID_HEIGHT = 36;
+
+    bool isPen = true;
+
+    int currentToolWidth = 1;
+    int currentPenWidth = 1;
+    int currentEraserWidth = 1;
+
+    QColor currentToolColor = Qt::black;
+    QColor currentPenColor = Qt::black;
+
+    int currentFrameIndex = 0;
+    int currentLayerIndex = 0;
     int totalLayersCreated = 0;
+
+public slots:
+    void setPen();
+    void setEraser();
+    void changePenSize(int size);
+    void changeEraserSize(int size);
+    void changePenColor(const QColor &color);
+    void drawPixel(const QPoint &pos);
 
 };
 #endif // MODEL_H
