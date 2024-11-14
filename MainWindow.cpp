@@ -55,6 +55,10 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         handleLayerVisibilityToggle(row, visible);
         });
 
+    connect(canvas, &Canvas::gridResized, animationPreview, &AnimationPreview::resizeWindow);
+    connect(this, &MainWindow::frameRateChanged, animationPreview, &AnimationPreview::updateFramerate);
+    connect(ui->fpsBox, QOverload<int>::of(&QSpinBox::valueChanged), animationPreview, [this](){emit frameRateChanged(ui->fpsBox->value());});
+
     connect(ui->saveButton, &QPushButton::clicked, this, [=]() { this->model.save();
     });
 }

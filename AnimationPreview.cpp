@@ -3,18 +3,16 @@
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
-#include <QDebug>
 
 AnimationPreview::AnimationPreview(QWidget *parent, Canvas* canvas)
     : QWidget{parent}
     , frameIndex(0)
     , canvas(canvas)
+    , windowSize(209, 209)
 {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &AnimationPreview::nextFrame);
     timer->start(1000 / 12);
-
-    painter = new QPainter(this);
 }
 
 void AnimationPreview::nextFrame() {
@@ -30,9 +28,12 @@ void AnimationPreview::nextFrame() {
 }
 
 void AnimationPreview::paintEvent(QPaintEvent *event) {
-    auto rectThing = event->rect();
+    QPainter painter(this);
+    QRect target(event->rect());
+    QRect frameRect(frame.rect());
+    target.setSize(windowSize);
 
-    painter->drawImage(rectThing, frame, rectThing);
+    painter.drawImage(target, frame, frameRect);
 }
 
 void AnimationPreview::updateFramerate(int fps) {
@@ -41,4 +42,17 @@ void AnimationPreview::updateFramerate(int fps) {
 
 void AnimationPreview::setCanvas(Canvas* _canvas) {
     canvas = _canvas;
+}
+
+void AnimationPreview::resizeWindow(int width, int height) {
+    float aspect = width / (float)height;
+
+    if (width < height) {
+        windowSize.setWidth(209 * aspect);
+        windowSize.setHeight(209);
+    }
+    else {
+        windowSize.setWidth(209);
+        windowSize.setHeight(209 / aspect);
+    }
 }

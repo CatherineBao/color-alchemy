@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTimer>
 #include <Canvas.h>
+#include <QPaintEvent>
 
 class AnimationPreview : public QWidget
 {
@@ -15,10 +16,10 @@ public:
 
 private:
     QTimer* timer;
-    QPainter* painter;
     int frameIndex;
     QImage frame;
     Canvas* canvas;
+    QSize windowSize;
 
     void nextFrame();
 
@@ -27,6 +28,7 @@ protected:
 
 public slots:
     void updateFramerate(int fps);
+    void resizeWindow(int width, int height);
 };
 
 #endif // ANIMATIONPREVIEW_H

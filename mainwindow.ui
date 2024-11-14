@@ -240,7 +240,7 @@ QPushButton {
      <string>Preview</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="fps">
+   <widget class="QSpinBox" name="fpsBox">
     <property name="geometry">
      <rect>
       <x>780</x>
