@@ -58,13 +58,20 @@ void Canvas::drawPixel(const QPoint &pos)
 
     QPainter painter(&frames[currentFrame][currentLayer].image);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(currentToolColor);
 
     int scaledX = x * pixelSize;
     int scaledY = y * pixelSize;
     int drawWidth = qMin(pixelSize * currentToolWidth, pixelSize * gridWidth - x);
 
+    if (!isPen) {
+        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+        painter.setBrush(Qt::transparent);
+    } else {
+        painter.setBrush(currentToolColor);
+    }
+
     painter.drawRect(scaledX, scaledY, drawWidth, drawWidth);
+
     update(QRect(scaledX, scaledY, drawWidth, drawWidth));
 }
 
@@ -90,7 +97,7 @@ void Canvas::setPen() {
 
 void Canvas::setEraser() {
     isPen = false;
-    currentToolColor = backgroundColor;
+    currentToolColor = Qt::transparent;
     currentToolWidth = currentEraserWidth;
 }
 
@@ -123,7 +130,6 @@ void Canvas::resizeGrid(int width, int height) {
     calculatePixelSize();
 
     QImage newImage(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
-    newImage.fill(backgroundColor);
 
     if(!oldImage.isNull()) {
         QPainter painter(&newImage);

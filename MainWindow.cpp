@@ -90,7 +90,7 @@ void MainWindow::openColorPicker(){
     if (color.isValid()) {
         emit changeColor(color);
         QString style = QString("background-color: %1;").arg(color.name());
-        ui->currentColorLabel->setStyleSheet(style);
+        ui->colorButton->setStyleSheet(style);
     }
 }
 
