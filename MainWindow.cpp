@@ -54,6 +54,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         bool visible = item->checkState() == Qt::Checked;
         handleLayerVisibilityToggle(row, visible);
         });
+
+    ui->fpsLabel->setAlignment(Qt::AlignCenter);
 }
 
 MainWindow::~MainWindow()
@@ -82,7 +84,7 @@ void MainWindow::openColorPicker(){
     if (color.isValid()) {
         emit changeColor(color);
         QString style = QString("background-color: %1;").arg(color.name());
-        ui->currentColorLabel->setStyleSheet(style);
+        ui->colorButton->setStyleSheet(style);
     }
 }
 
