@@ -33,7 +33,6 @@ void AnimationPreview::paintEvent(QPaintEvent *event) {
     auto rectThing = event->rect();
 
     painter->drawImage(rectThing, frame, rectThing);
-    qInfo("yup");
 }
 
 void AnimationPreview::updateFramerate(int fps) {
