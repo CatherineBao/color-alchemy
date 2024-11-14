@@ -37,6 +37,7 @@ public slots:
     void openColorPicker();
 
 private slots:
+    void syncLayerSelection();
     void handleAddLayer();
     void handleDeleteLayer();
     void updateLayerDisplay();

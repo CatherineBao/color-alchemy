@@ -165,7 +165,8 @@ void Canvas::changePenColor(const QColor &color){
 
 void Canvas::addLayer() {
     Layer newLayer;
-    newLayer.name = QString("Layer %1").arg(frames[currentFrame].size() + 1);
+    totalLayersCreated++;
+    newLayer.name = QString("Layer %1").arg(totalLayersCreated);
     newLayer.image = QImage(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
     newLayer.image.fill(Qt::transparent);
     newLayer.visible = true;
@@ -177,9 +178,17 @@ void Canvas::addLayer() {
 
 void Canvas::deleteLayer(int index) {
     if(frames[currentFrame].size() > 1 && index >= 0 && index < frames[currentFrame].size()) {
+        QString layerName = frames[currentFrame][index].name;
         frames[currentFrame].remove(index);
         currentLayer = qMin(currentLayer, frames[currentFrame].size() - 1);
         update();
+    }
+}
+
+void Canvas::setCurrentLayer(int index) {
+    if(index >= 0 && index < frames[currentFrame].size() && index != currentLayer) {
+        currentLayer = index;
+        emit currentLayerChanged(index);
     }
 }
 
@@ -197,11 +206,15 @@ void Canvas::setLayerName(int index, const QString& name) {
 }
 
 void Canvas::addFrame() {
-    QVector<Layer> newFrame = frames[currentFrame];
+    QVector<Layer> newFrame;
 
-    for(Layer& layer : newFrame) {
-        QImage newImage = layer.image.copy();
-        layer.image = newImage;
+    for(const Layer& layer : frames[currentFrame]) {
+        Layer newLayer;
+        newLayer.name = layer.name;
+        newLayer.visible = layer.visible;
+        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
+        newLayer.image = layer.image.copy();
+        newFrame.append(newLayer);
     }
     frames.insert(currentFrame + 1, newFrame);
     currentFrame++;
@@ -220,6 +233,7 @@ void Canvas::setCurrentFrame(int index) {
     if(index >= 0 && index < frames.size() && index != currentFrame) {
         currentFrame = index;
         currentLayer = qMin(currentLayer, frames[currentFrame].size() - 1);
+        emit currentLayerChanged(currentLayer);
         update();
     }
 }
