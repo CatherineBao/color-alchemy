@@ -59,8 +59,9 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(this, &MainWindow::frameRateChanged, animationPreview, &AnimationPreview::updateFramerate);
     connect(ui->fpsBox, QOverload<int>::of(&QSpinBox::valueChanged), animationPreview, [this](){emit frameRateChanged(ui->fpsBox->value());});
 
-    connect(ui->saveButton, &QPushButton::clicked, this, [=]() { this->model.save();
-    });
+    connect(ui->saveButton, &QPushButton::clicked, this, [=]() {this->model.save();});
+    connect(ui->loadButton, &QPushButton::clicked, this, [=]() {this->model.frames = this->model.load();});
+
 }
 
 MainWindow::~MainWindow()
