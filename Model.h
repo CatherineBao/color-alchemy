@@ -115,6 +115,5 @@ public slots:
     void changeEraserSize(int size);
     void changePenColor(const QColor &color);
     void drawPixel(const QPoint &pos);
-
 };
 #endif // MODEL_H
