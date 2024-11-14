@@ -81,19 +81,7 @@ void Model::addFrame() {
     frames.insert(currentFrameIndex + 1, newFrame);
     setCurrentFrame(currentFrameIndex + 1);
     addLayer();
-
-    for(const Layer& layer : frames[currentFrameIndex]) {
-        Layer newLayer(canvasWidth, canvasHeight);
-        newLayer.name = layer.name;
-        newLayer.visible = layer.visible;
-        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
-        newLayer.image = layer.image.copy();
-        newFrame.append(newLayer);
-    }
-
-    frames.insert(currentFrameIndex + 1, newFrame);
-    setCurrentFrame(currentFrameIndex + 1);
-
+    updateCanvas();
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
 }
@@ -265,7 +253,6 @@ void Model::updateEverything() {
 }
 
 void Model::updateCanvas() {
-    // emit redrawCanvas(renderCurrentFrame());
     qInfo() << "update canvas: " << currentFrameIndex;
     QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
