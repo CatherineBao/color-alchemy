@@ -1,24 +1,30 @@
-#include "Model.h"
-#include <QPainter>
+///
+/// Style checked by: Jonas Regehr
+///
 #include <QFileDialog>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include "Model.h"
+#include <QPainter>
 
-Model::Model(QObject *parent)
+Model::Model(QObject *parent, int width, int height)
     : QObject{parent}
+    , canvasWidth(width)
+    , canvasHeight(height)
 {
     frames.resize(1);
     addLayer();
 }
 
 void Model::addLayer() {
-    Layer newLayer;
+    Layer newLayer(canvasWidth, canvasHeight);
     totalLayersCreated++;
     newLayer.name = QString("Layer %1").arg(totalLayersCreated);
     newLayer.visible = true;
     frames[currentFrameIndex].append(newLayer);
     currentLayerIndex = frames[currentFrameIndex].size() - 1;
+
     emit layersChanged();
 }
 
@@ -26,6 +32,7 @@ void Model::deleteLayer(int index) {
     if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
         frames[currentFrameIndex].remove(index);
         currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
+
         emit layersChanged();
         updateCanvas();
     }
@@ -34,14 +41,15 @@ void Model::deleteLayer(int index) {
 void Model::setCurrentLayer(int index) {
     if(index >= 0 && index < frames[currentFrameIndex].size() && index != currentLayerIndex) {
         currentLayerIndex = index;
+
         emit currentLayerChanged(index);
     }
 }
 
 QString Model::getLayerName(int index) const {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+    if(index >= 0 && index < frames[currentFrameIndex].size())
         return frames[currentFrameIndex][index].name;
-    }
+
     return QString();
 }
 
@@ -55,15 +63,16 @@ void Model::setLayerName(int index, const QString& name) {
 void Model::setLayerVisibility(int index, bool visible) {
     if(index >= 0 && index < frames[currentFrameIndex].size()) {
         frames[currentFrameIndex][index].visible = visible;
+
         emit layerVisibilityChanged(index);
         updateCanvas();
     }
 }
 
-bool Model:: isLayerVisible(int index) const {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+bool Model::isLayerVisible(int index) const {
+    if(index >= 0 && index < frames[currentFrameIndex].size())
         return frames[currentFrameIndex][index].visible;
-    }
+
     return false;
 }
 
@@ -72,6 +81,19 @@ void Model::addFrame() {
     frames.insert(currentFrameIndex + 1, newFrame);
     setCurrentFrame(currentFrameIndex + 1);
     addLayer();
+
+    for(const Layer& layer : frames[currentFrameIndex]) {
+        Layer newLayer(canvasWidth, canvasHeight);
+        newLayer.name = layer.name;
+        newLayer.visible = layer.visible;
+        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
+        newLayer.image = layer.image.copy();
+        newFrame.append(newLayer);
+    }
+
+    frames.insert(currentFrameIndex + 1, newFrame);
+    setCurrentFrame(currentFrameIndex + 1);
+
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
 }
@@ -86,13 +108,13 @@ void Model::deleteFrame(int index) {
 }
 
 void Model::setCurrentFrame(int index) {
-    if(index >= 0 && index < frames.size() && index != currentFrameIndex) {
+    if(index >= 0 && index < frames.size() && index != currentFrameIndex)
         currentFrameIndex = index;
         updateCanvas();
     }
 }
 
-void Model::saveJSON(){
+void Model::saveJSON() {
     QString fileName = QFileDialog::getSaveFileName(nullptr, "Save Sprites", "", "JSON Files (*.json)");
     if (fileName.isEmpty()) return;
 
@@ -121,7 +143,6 @@ void Model::saveJSON(){
     saveFile.close();
 }
 
-
 void Model::loadJSON() {
     QVector<QVector<Model::Layer>> layersData;
 
@@ -147,13 +168,11 @@ void Model::loadJSON() {
         QVector<Model::Layer> layerList;
         for (const QJsonValue& frameValue : framesArray) {
             QJsonObject frameObj = frameValue.toObject();
-            Model::Layer layer = Model::Layer::fromJson(frameObj);
+            Model::Layer layer = Model::Layer::fromJson(frameObj, canvasWidth, canvasHeight);
             layerList.append(layer);
         }
-
         layersData.append(layerList);
     }
-
     frames = layersData;
     updateEverything();
 }
@@ -162,14 +181,18 @@ void Model::renderFrameInternal(QImage& out, int index, qreal opacity) const {
     if (index > frames.size() - 1 || index < 0) {
         return;
     }
+QImage Model::renderFrame(int index) const {
+    QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
+    QPainter painter(&result);
+
+    if (index > frames.size() - 1 || index < 0) return result;
 
     QPainter painter(&out);
     painter.setOpacity(opacity);
 
     for(const Layer& layer : frames[index]) {
-        if(layer.visible) {
-            painter.drawImage(0, 0, layer.image);
-        }
+        if(layer.visible) painter.drawImage(0, 0, layer.image);
     }
 }
 
@@ -184,18 +207,17 @@ QImage Model::renderCurrentFrame() const {
     return renderFrame(currentFrameIndex);
 }
 
-void Model::drawPixel(const QPoint &pos)
-{
+void Model::drawPixel(const QPoint &pos) {
     int x = pos.x() / PIXEL_SIZE;
     int y = pos.y() / PIXEL_SIZE;
 
-    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
+    if (x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight)
         return;
 
     QPainter painter(&frames[currentFrameIndex][currentLayerIndex].image);
     painter.setPen(Qt::NoPen);
 
-    int drawWidth = qMin(currentToolWidth, GRID_WIDTH - x);
+    int drawWidth = qMin(currentToolWidth, canvasWidth - x);
 
     if (!isPen) {
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
@@ -203,6 +225,9 @@ void Model::drawPixel(const QPoint &pos)
     } else {
         painter.setBrush(currentToolColor);
     }
+
+    qDebug() << x;
+    qDebug() << y;
 
     painter.drawRect(x, y, drawWidth, drawWidth);
 
@@ -224,18 +249,16 @@ void Model::setEraser() {
 void Model::changePenSize(int size) {
     currentPenWidth = size;
 
-    if (isPen)
-        currentToolWidth = size;
+    if (isPen) currentToolWidth = size;
 }
 
 void Model::changeEraserSize(int size) {
     currentEraserWidth = size;
 
-    if (!isPen)
-        currentToolWidth = size;
+    if (!isPen) currentToolWidth = size;
 }
 
-void Model::changePenColor(const QColor &color){
+void Model::changePenColor(const QColor &color) {
     currentPenColor = color;
     this->setPen();
 }
@@ -264,4 +287,31 @@ void Model::updateCanvas() {
     renderFrameInternal(result, currentFrameIndex, 1);
 
     emit redrawCanvas(result);
+}
+
+Model& Model::operator=(const Model& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    currentToolWidth = other.currentToolWidth;
+    currentPenWidth = other.currentPenWidth;
+    currentEraserWidth = other.currentEraserWidth;
+    currentToolColor = other.currentToolColor;
+    currentPenColor = other.currentPenColor;
+    currentFrameIndex = other.currentFrameIndex;
+    currentLayerIndex = other.currentLayerIndex;
+    totalLayersCreated = other.totalLayersCreated;
+    isPen = other.isPen;
+    canvasWidth = other.canvasWidth;
+    canvasHeight = other.canvasHeight;
+
+    frames = other.frames;
+
+    emit framesChanged();
+    emit layersChanged();
+    emit currentLayerChanged(currentLayerIndex);
+    emit currentFrameChanged(currentFrameIndex);
+
+    return *this;
 }

@@ -15,20 +15,7 @@ public:
     ///
     /// \brief Canvas - constructor for Canvas
     ///
-    Canvas(QWidget *parent = nullptr);
-
-    ///
-    /// \brief renderFrame - return a specific layer
-    /// \param index - the index of the layer to return
-    /// \return the layer at index
-    ///
-    QImage renderFrame(int index) const;
-
-    ///
-    /// \brief renderCurrentFrame - return the total of the layers
-    /// \return - the total of the layers
-    ///
-    QImage renderCurrentFrame() const;
+    Canvas(QWidget *parent = nullptr, int width = 36, int height = 36);
 
 public slots:
     ///
@@ -54,19 +41,12 @@ private:
     ///
     /// \brief GRID_WIDTH - width of the grid
     ///
-    const int GRID_WIDTH = 36;
+    int gridWidth;
 
     ///
     /// \brief GRID_HEIGHT - height of the grid
     ///
-    const int GRID_HEIGHT = 36;
-
-    ///
-    /// \brief initializeImage - initialize the image
-    /// \param width - width of the image
-    /// \param height - height of the image
-    ///
-    void initializeImage(int width, int height);
+    int gridHeight;
 
     ///
     /// \brief frame - the current frame
