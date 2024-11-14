@@ -5,15 +5,17 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 
-Model::Model(QObject *parent)
+Model::Model(QObject *parent, int width, int height)
     : QObject{parent}
+    , canvasWidth(width)
+    , canvasHeight(height)
 {
     frames.resize(1);
     addLayer();
 }
 
 void Model::addLayer() {
-    Layer newLayer;
+    Layer newLayer(canvasWidth, canvasHeight);
     totalLayersCreated++;
     newLayer.name = QString("Layer %1").arg(totalLayersCreated);
     newLayer.visible = true;
@@ -71,7 +73,7 @@ bool Model:: isLayerVisible(int index) const {
 void Model::addFrame() {
     QVector<Layer> newFrame;
     for(const Layer& layer : frames[currentFrameIndex]) {
-        Layer newLayer;
+        Layer newLayer(canvasWidth, canvasHeight);
         newLayer.name = layer.name;
         newLayer.visible = layer.visible;
         newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
@@ -153,7 +155,7 @@ void Model::loadJSON() {
         QVector<Model::Layer> layerList;
         for (const QJsonValue& frameValue : framesArray) {
             QJsonObject frameObj = frameValue.toObject();
-            Model::Layer layer = Model::Layer::fromJson(frameObj);
+            Model::Layer layer = Model::Layer::fromJson(frameObj, canvasWidth, canvasHeight);
             layerList.append(layer);
         }
 
@@ -165,7 +167,7 @@ void Model::loadJSON() {
 }
 
 QImage Model::renderFrame(int index) const {
-    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
+    QImage result(canvasWidth, canvasHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
     QPainter painter(&result);
 
@@ -191,13 +193,13 @@ void Model::drawPixel(const QPoint &pos)
     int x = pos.x() / PIXEL_SIZE;
     int y = pos.y() / PIXEL_SIZE;
 
-    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
+    if (x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight)
         return;
 
     QPainter painter(&frames[currentFrameIndex][currentLayerIndex].image);
     painter.setPen(Qt::NoPen);
 
-    int drawWidth = qMin(currentToolWidth, GRID_WIDTH - x);
+    int drawWidth = qMin(currentToolWidth, canvasWidth - x);
 
     if (!isPen) {
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
@@ -205,6 +207,9 @@ void Model::drawPixel(const QPoint &pos)
     } else {
         painter.setBrush(currentToolColor);
     }
+
+    qDebug() << x;
+    qDebug() << y;
 
     painter.drawRect(x, y, drawWidth, drawWidth);
 
@@ -251,4 +256,31 @@ void Model::updateEverything() {
     void layerNameChanged(int index);
     void currentLayerChanged(int index);
     void framesChanged();
+}
+
+Model& Model::operator=(const Model& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    currentToolWidth = other.currentToolWidth;
+    currentPenWidth = other.currentPenWidth;
+    currentEraserWidth = other.currentEraserWidth;
+    currentToolColor = other.currentToolColor;
+    currentPenColor = other.currentPenColor;
+    currentFrameIndex = other.currentFrameIndex;
+    currentLayerIndex = other.currentLayerIndex;
+    totalLayersCreated = other.totalLayersCreated;
+    isPen = other.isPen;
+    canvasWidth = other.canvasWidth;
+    canvasHeight = other.canvasHeight;
+
+    frames = other.frames;
+
+    emit framesChanged();
+    emit layersChanged();
+    emit currentLayerChanged(currentLayerIndex);
+    emit currentFrameChanged(currentFrameIndex);
+
+    return *this;
 }

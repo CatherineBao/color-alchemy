@@ -52,6 +52,6 @@ private slots:
     void handleDeleteFrame();
     void updateFrameDisplay();
     void handleFrameSelection(int index);
-
+    void resizeCanvas();
 };
 #endif // MAINWINDOW_H

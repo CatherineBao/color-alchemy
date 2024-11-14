@@ -13,14 +13,14 @@ class Model : public QObject
 {
     Q_OBJECT
 public:
-    explicit Model(QObject *parent = nullptr);
+    explicit Model(QObject *parent = nullptr, int width = 36, int height = 36);
 
-    struct Layer {
+    struct Layer{
         QString name;
         QImage image;
         bool visible;
 
-        Layer() : name(""), image(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32), visible(true) {
+        Layer(int width, int height) : name(""), image(width, height, QImage::Format_ARGB32), visible(true) {
             image.fill(Qt::transparent);
         }
 
@@ -39,8 +39,8 @@ public:
 
         }
 
-        static Layer fromJson(const QJsonObject& jsonObj) {
-            Layer layer;
+        static Layer fromJson(const QJsonObject& jsonObj, int width, int height) {
+            Layer layer(width, height);
 
             layer.name = jsonObj["name"].toString();
             QString base64Image = jsonObj["image"].toString();
@@ -50,7 +50,6 @@ public:
             layer.visible = jsonObj["visible"].toBool();
             return layer;
         }
-
     };
 
     void addLayer();
@@ -82,6 +81,9 @@ public:
 
     QVector<QVector<Layer>> frames;
 
+    Model& operator=(const Model& other);
+
+
 signals:
     void redrawCanvas(QImage);
     void layersChanged();
@@ -94,8 +96,8 @@ signals:
 private:
     const int PIXEL_SIZE = 10;
 
-    static const int GRID_WIDTH = 36;
-    static const int GRID_HEIGHT = 36;
+    int canvasWidth = 36;
+    int canvasHeight = 36;
 
     bool isPen = true;
 
@@ -111,6 +113,8 @@ private:
     int totalLayersCreated = 0;
 
     void updateEverything();
+
+    void setGridSize(int width, int height);
 
 public slots:
     void setPen();

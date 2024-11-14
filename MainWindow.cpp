@@ -46,6 +46,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     connect(canvas, &Canvas::pixelChanged, &model, &Model::drawPixel);
     connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
+    connect(ui->resizeButton, &QPushButton::clicked, this, &MainWindow::resizeCanvas);
 
 }
 
@@ -177,4 +178,33 @@ void MainWindow::updateFrameDisplay() {
     ui->frameCountLabel->setText(QString("Total Frames: %1").arg(model.getFrameCount() - 1));
 
     ui->deleteFrameButton->setEnabled(model.getFrameCount() > 1);
+}
+
+
+void MainWindow::resizeCanvas()
+{
+    int width = ui->widthSpinBox->value();
+    int height = ui->heightSpinBox->value();
+
+    delete ui->editor;
+    ui->editor = nullptr;
+
+    Canvas* newCanvas = new Canvas(ui->centralwidget, width, height);
+
+    int canvasWidth = width * 10 + 1;
+    int canvasHeight = height * 10 + 1;
+
+    ui->editor = newCanvas;
+    ui->editor->setGeometry(QRect(420, 90, canvasWidth, canvasHeight));
+    ui->editor->show();
+
+    ui->animationPreview->resizeWindow(canvasWidth, canvasHeight);
+
+    canvas = newCanvas;
+    connect(canvas, &Canvas::pixelChanged, &model, &Model::drawPixel);
+    connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
+
+    model = *new Model(nullptr, width, height);
+
+    ui->editor->update();
 }

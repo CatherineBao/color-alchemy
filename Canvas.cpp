@@ -2,9 +2,11 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-Canvas::Canvas(QWidget *parent)
+Canvas::Canvas(QWidget *parent, int width, int height)
     : QWidget(parent)
-    , frame(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32)
+    , gridWidth(width)
+    , gridHeight(height)
+    , frame(width, height, QImage::Format_ARGB32)
 {
     setAttribute(Qt::WA_StaticContents);
     frame.fill(Qt::transparent);
@@ -38,12 +40,17 @@ void Canvas::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect();
     painter.drawImage(dirtyRect, frame, frame.rect());
 
-    // draw grids
     painter.setPen(Qt::gray);
-    for (int i = 0; i <= GRID_WIDTH; ++i)
-        painter.drawLine(i * PIXEL_SIZE, 0, i * PIXEL_SIZE, GRID_HEIGHT * PIXEL_SIZE);
-    for (int i = 0; i <= GRID_HEIGHT; ++i)
-        painter.drawLine(0, i * PIXEL_SIZE, GRID_WIDTH * PIXEL_SIZE, i * PIXEL_SIZE);
+
+    for (int i = 0; i <= gridWidth; ++i) {
+        int x = i * PIXEL_SIZE;
+        painter.drawLine(x, 0, x, gridHeight * PIXEL_SIZE);
+    }
+
+    for (int j = 0; j <= gridHeight; ++j) {
+        int y = j * PIXEL_SIZE;
+        painter.drawLine(0, y, gridWidth * PIXEL_SIZE, y);
+    }
 }
 
 void Canvas::onRedraw(QImage newFrame) {

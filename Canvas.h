@@ -15,7 +15,7 @@ public:
     ///
     /// \brief Canvas - constructor for Canvas
     ///
-    Canvas(QWidget *parent = nullptr);
+    Canvas(QWidget *parent = nullptr, int width = 36, int height = 36);
 
     ///
     /// \brief renderFrame - return a specific layer
@@ -54,12 +54,12 @@ private:
     ///
     /// \brief GRID_WIDTH - width of the grid
     ///
-    const int GRID_WIDTH = 36;
+    int gridWidth;
 
     ///
     /// \brief GRID_HEIGHT - height of the grid
     ///
-    const int GRID_HEIGHT = 36;
+    int gridHeight;
 
     ///
     /// \brief initializeImage - initialize the image

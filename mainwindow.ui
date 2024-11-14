@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1173</width>
-    <height>597</height>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,7 +97,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="Canvas" name="editor" native="true">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>320</x>
       <y>90</y>
       <width>361</width>
       <height>361</height>
@@ -107,8 +107,8 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="verticalFrame">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>20</x>
+      <y>40</y>
       <width>191</width>
       <height>321</height>
      </rect>
@@ -142,9 +142,9 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frameInfo">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>790</x>
       <y>302</y>
-      <width>311</width>
+      <width>351</width>
       <height>91</height>
      </rect>
     </property>
@@ -184,10 +184,10 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="tools">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>370</y>
-      <width>141</width>
-      <height>181</height>
+      <x>20</x>
+      <y>380</y>
+      <width>191</width>
+      <height>211</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -256,9 +256,9 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>790</x>
       <y>30</y>
-      <width>311</width>
+      <width>351</width>
       <height>261</height>
      </rect>
     </property>
@@ -307,13 +307,13 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
      </item>
     </layout>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="canvasSettings">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>790</x>
       <y>410</y>
-      <width>311</width>
-      <height>171</height>
+      <width>351</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -323,7 +323,47 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_4">
-     <item row="1" column="0" colspan="2">
+     <item row="3" column="1">
+      <widget class="QLabel" name="x">
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="heightSpinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="value">
+        <number>36</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QSpinBox" name="widthSpinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="value">
+        <number>36</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="resizeButton">
+       <property name="text">
+        <string>RESIZE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
       <widget class="QLabel" name="canvasInfoLabel">
        <property name="styleSheet">
         <string notr="true">QFrame {
@@ -331,21 +371,21 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }</string>
        </property>
        <property name="text">
-        <string>CANVAS INFO</string>
+        <string>CANVAS Settings</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
-      <widget class="QPushButton" name="saveButton">
-       <property name="text">
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
+     <item row="4" column="0" colspan="4">
       <widget class="QPushButton" name="loadButton">
        <property name="text">
         <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="4">
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Save</string>
        </property>
       </widget>
      </item>
