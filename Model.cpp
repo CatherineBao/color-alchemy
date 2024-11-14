@@ -11,7 +11,6 @@ Model::Model(QObject *parent)
     : QObject{parent}
 {
     frames.resize(1);
-    frames[0].resize(1);
     addLayer();
 }
 
@@ -59,6 +58,7 @@ void Model::setLayerVisibility(int index, bool visible) {
     if(index >= 0 && index < frames[currentFrameIndex].size()) {
         frames[currentFrameIndex][index].visible = visible;
         emit layerVisibilityChanged(index);
+        emit redrawCanvas(renderCurrentFrame());
     }
 }
 
@@ -129,16 +129,16 @@ void Model::saveJSON(){
 }
 
 
-QVector<QVector<Model::Layer>> Model::loadJSON() {
+void Model::loadJSON() {
     QVector<QVector<Model::Layer>> layersData;
 
     QString fileName = QFileDialog::getOpenFileName(nullptr, "Load Sprites", "", "JSON Files (*.json)");
-    if (fileName.isEmpty()) return layersData;
+    if (fileName.isEmpty()) return;
 
     QFile loadFile(fileName);
     if (!loadFile.open(QIODevice::ReadOnly)) {
         QMessageBox::warning(nullptr, "Error", "Couldn't open load file.");
-        return layersData;
+        return;
     }
 
     QByteArray loadData = loadFile.readAll();
@@ -161,7 +161,8 @@ QVector<QVector<Model::Layer>> Model::loadJSON() {
         layersData.append(layerList);
     }
 
-    return layersData;
+    frames = layersData;
+    emit redrawCanvas(renderCurrentFrame());
 }
 
 QImage Model::renderFrame(int index) const {
@@ -240,4 +241,15 @@ void Model::changeEraserSize(int size) {
 void Model::changePenColor(const QColor &color){
     currentPenColor = color;
     this->setPen();
+}
+
+void Model::updateEverything() {
+    emit redrawCanvas(renderCurrentFrame());
+    emit framesChanged();
+    emit currentFrameChanged(currentFrameIndex);
+    void layersChanged();
+    void layerVisibilityChanged(int index);
+    void layerNameChanged(int index);
+    void currentLayerChanged(int index);
+    void framesChanged();
 }

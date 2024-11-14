@@ -17,9 +17,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     animationPreview = qobject_cast<AnimationPreview*>(ui->animationPreview);
     animationPreview->setModel(&model);
 
-    ui->penSize->setValue(1);
-    ui->eraserSize->setValue(1);
-
     setupLayerConnections();
     setupFrameConnections();
     updateLayerDisplay();
@@ -46,8 +43,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     connect(this, &MainWindow::frameRateChanged, animationPreview, &AnimationPreview::updateFramerate);
     connect(ui->fpsBox, QOverload<int>::of(&QSpinBox::valueChanged), animationPreview, [this](){emit frameRateChanged(ui->fpsBox->value());});
 
-    connect(ui->saveButton, &QPushButton::clicked, this, [=]() {this->model.saveJSON();});
-    connect(ui->loadButton, &QPushButton::clicked, this, [=]() {this->model.frames = this->model.loadJSON();});
+    connect(ui->saveButton, &QPushButton::clicked, &model, &Model::saveJSON);
+    connect(ui->loadButton, &QPushButton::clicked, &model, &Model::loadJSON);
 
     connect(canvas, &Canvas::pixelChanged, &model, &Model::drawPixel);
     connect(&model, &Model::redrawCanvas, canvas, &Canvas::onRedraw);
