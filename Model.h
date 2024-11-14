@@ -20,7 +20,9 @@ public:
         QImage image;
         bool visible;
 
-        Layer() : name(""), image(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32), visible(true) {}
+        Layer() : name(""), image(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32), visible(true) {
+            image.fill(Qt::transparent);
+        }
 
         QJsonObject toJson() const {
 
@@ -76,7 +78,7 @@ public:
     const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrameIndex]; }
 
     void saveJSON();
-    QVector<QVector<Layer>> loadJSON();
+    void loadJSON();
 
     QVector<QVector<Layer>> frames;
 
@@ -107,6 +109,8 @@ private:
     int currentFrameIndex = 0;
     int currentLayerIndex = 0;
     int totalLayersCreated = 0;
+
+    void updateEverything();
 
 public slots:
     void setPen();

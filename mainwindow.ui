@@ -279,6 +279,9 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 	border-radius: 10px;
 }</string>
        </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
        <layout class="QGridLayout" name="gridLayout_2"/>
       </widget>
      </item>

@@ -36,7 +36,6 @@ signals:
     void frameRateChanged(int fps);
 
 public slots:
-    void handleCanvasResize();
     void openColorPicker();
 
 private slots:
