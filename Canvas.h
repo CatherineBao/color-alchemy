@@ -17,19 +17,6 @@ public:
     ///
     Canvas(QWidget *parent = nullptr);
 
-    ///
-    /// \brief renderFrame - return a specific layer
-    /// \param index - the index of the layer to return
-    /// \return the layer at index
-    ///
-    QImage renderFrame(int index) const;
-
-    ///
-    /// \brief renderCurrentFrame - return the total of the layers
-    /// \return - the total of the layers
-    ///
-    QImage renderCurrentFrame() const;
-
 public slots:
     ///
     /// \brief onRedraw - called when a new pixel is drawn
@@ -60,13 +47,6 @@ private:
     /// \brief GRID_HEIGHT - height of the grid
     ///
     const int GRID_HEIGHT = 36;
-
-    ///
-    /// \brief initializeImage - initialize the image
-    /// \param width - width of the image
-    /// \param height - height of the image
-    ///
-    void initializeImage(int width, int height);
 
     ///
     /// \brief frame - the current frame

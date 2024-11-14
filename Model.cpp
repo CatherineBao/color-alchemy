@@ -178,12 +178,10 @@ QImage Model::renderFrame(int index) const {
     result.fill(Qt::transparent);
     QPainter painter(&result);
 
-    if (index > frames.size() - 1 || index < 0)
-        return result;
+    if (index > frames.size() - 1 || index < 0) return result;
 
     for(const Layer& layer : frames[index]) {
-        if(layer.visible)
-            painter.drawImage(0, 0, layer.image);
+        if(layer.visible) painter.drawImage(0, 0, layer.image);
     }
 
     return result;
@@ -198,8 +196,7 @@ void Model::drawPixel(const QPoint &pos)
     int x = pos.x() / PIXEL_SIZE;
     int y = pos.y() / PIXEL_SIZE;
 
-    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
-        return;
+    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) return;
 
     QPainter painter(&frames[currentFrameIndex][currentLayerIndex].image);
     painter.setPen(Qt::NoPen);
@@ -233,15 +230,13 @@ void Model::setEraser() {
 void Model::changePenSize(int size) {
     currentPenWidth = size;
 
-    if (isPen)
-        currentToolWidth = size;
+    if (isPen) currentToolWidth = size;
 }
 
 void Model::changeEraserSize(int size) {
     currentEraserWidth = size;
 
-    if (!isPen)
-        currentToolWidth = size;
+    if (!isPen) currentToolWidth = size;
 }
 
 void Model::changePenColor(const QColor &color){

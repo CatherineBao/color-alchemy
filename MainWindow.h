@@ -72,27 +72,27 @@ public slots:
 
 private slots:
     ///
-    /// \brief syncLayerSelection - syncs layer selections
+    /// \brief syncLayerSelection - syncs layer selections bewteen ui and class
     ///
     void syncLayerSelection();
 
     ///
-    /// \brief handleAddLayer -
+    /// \brief handleAddLayer - adds a layer to the model and updates the display
     ///
     void handleAddLayer();
 
     ///
-    /// \brief handleDeleteLayer
+    /// \brief handleDeleteLayer - deletes a layer from the model and updates the display
     ///
     void handleDeleteLayer();
 
     ///
-    /// \brief updateLayerDisplay
+    /// \brief updateLayerDisplay - updates the display of the layers
     ///
     void updateLayerDisplay();
 
     ///
-    /// \brief handleLayerNameEdit
+    /// \brief handleLayerNameEdit -
     /// \param item
     ///
     void handleLayerNameEdit(QListWidgetItem* item);

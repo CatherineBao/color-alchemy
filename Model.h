@@ -75,8 +75,6 @@ public:
     QImage renderFrame(int index) const;
     QImage renderCurrentFrame() const;
 
-    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrameIndex]; }
-
     void saveJSON();
     void loadJSON();
 
@@ -103,12 +101,12 @@ private:
     int currentPenWidth = 1;
     int currentEraserWidth = 1;
 
-    QColor currentToolColor = Qt::black;
-    QColor currentPenColor = Qt::black;
-
     int currentFrameIndex = 0;
     int currentLayerIndex = 0;
     int totalLayersCreated = 0;
+
+    QColor currentToolColor = Qt::black;
+    QColor currentPenColor = Qt::black;
 
     void updateEverything();
 
