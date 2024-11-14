@@ -9,7 +9,6 @@ Model::Model(QObject *parent)
     : QObject{parent}
 {
     frames.resize(1);
-    //frames[0].resize(1);
     addLayer();
 }
 

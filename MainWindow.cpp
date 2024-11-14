@@ -15,9 +15,6 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     animationPreview = qobject_cast<AnimationPreview*>(ui->animationPreview);
     animationPreview->setModel(&model);
 
-    ui->penSize->setValue(1);
-    ui->eraserSize->setValue(1);
-
     setupLayerConnections();
     setupFrameConnections();
     updateLayerDisplay();
