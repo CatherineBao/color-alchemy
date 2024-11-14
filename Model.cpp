@@ -40,9 +40,9 @@ void Model::setCurrentLayer(int index) {
 }
 
 QString Model::getLayerName(int index) const {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+    if(index >= 0 && index < frames[currentFrameIndex].size())
         return frames[currentFrameIndex][index].name;
-    }
+
     return QString();
 }
 
@@ -62,9 +62,9 @@ void Model::setLayerVisibility(int index, bool visible) {
 }
 
 bool Model:: isLayerVisible(int index) const {
-    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+    if(index >= 0 && index < frames[currentFrameIndex].size())
         return frames[currentFrameIndex][index].visible;
-    }
+
     return false;
 }
 
@@ -93,9 +93,8 @@ void Model::deleteFrame(int index) {
 }
 
 void Model::setCurrentFrame(int index) {
-    if(index >= 0 && index < frames.size() && index != currentFrameIndex) {
+    if(index >= 0 && index < frames.size() && index != currentFrameIndex)
         currentFrameIndex = index;
-    }
 }
 
 void Model::saveJSON(){
@@ -169,14 +168,12 @@ QImage Model::renderFrame(int index) const {
     result.fill(Qt::transparent);
     QPainter painter(&result);
 
-    if (index > frames.size() - 1 || index < 0) {
+    if (index > frames.size() - 1 || index < 0)
         return result;
-    }
 
     for(const Layer& layer : frames[index]) {
-        if(layer.visible) {
+        if(layer.visible)
             painter.drawImage(0, 0, layer.image);
-        }
     }
 
     return result;

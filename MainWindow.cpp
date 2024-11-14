@@ -17,6 +17,7 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 
     setupLayerConnections();
     setupFrameConnections();
+
     updateLayerDisplay();
     updateFrameDisplay();
 
@@ -77,17 +78,15 @@ void MainWindow::setupLayerConnections() {
     connect(&model, &Model::layerNameChanged, this, &MainWindow::onLayerNameChanged);
 
     connect(ui->layerList, &QListWidget::currentRowChanged, this, [this](int row) {
-        if(row >= 0) {
-            model.setCurrentLayer(row);
-        }
+        if(row >= 0)
+            model.setCurrentLayer(row);  
     });
 }
 
 void MainWindow::syncLayerSelection() {
     int currentLayer = model.getCurrentLayer();
-    if(ui->layerList->currentRow() != currentLayer) {
+    if(ui->layerList->currentRow() != currentLayer)
         ui->layerList->setCurrentRow(currentLayer);
-    }
 }
 
 void MainWindow::handleAddLayer() {
@@ -134,9 +133,8 @@ void MainWindow::onLayerVisibilityChanged(int index) {
 
 void MainWindow::onLayerNameChanged(int index) {
     QListWidgetItem* item = ui->layerList->item(index);
-    if(item) {
-        item->setText(model.getLayerName(index));
-    }
+    if(item)
+        item->setText(model.getLayerName(index));   
 }
 
 void MainWindow::setupFrameConnections() {
@@ -173,8 +171,6 @@ void MainWindow::updateFrameDisplay() {
     ui->frameSpinBox->setRange(0, model.getFrameCount() - 1);
     ui->frameSpinBox->setValue(model.getCurrentFrame());
     ui->frameSpinBox->blockSignals(false);
-
     ui->frameCountLabel->setText(QString("Total Frames: %1").arg(model.getFrameCount() - 1));
-
     ui->deleteFrameButton->setEnabled(model.getFrameCount() > 1);
 }

@@ -17,9 +17,7 @@ AnimationPreview::AnimationPreview(QWidget *parent)
 
 void AnimationPreview::nextFrame() {
     int frameCount = model->getFrameCount();
-    if (frameCount == 0) {
-        return;
-    }
+    if (frameCount == 0) return;
 
     frameIndex = (frameIndex + 1) % frameCount;
     frame = model->renderFrame(frameIndex);
