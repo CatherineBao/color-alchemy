@@ -1,3 +1,5 @@
+///
+/// Style checked by:
 #include "MainWindow.h"
 #include "Canvas.h"
 

@@ -1,3 +1,5 @@
+///
+/// Style checked by:
 #include "Model.h"
 #include <QPainter>
 #include <QFileDialog>
@@ -25,7 +27,6 @@ void Model::addLayer() {
 
 void Model::deleteLayer(int index) {
     if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
-        QString layerName = frames[currentFrameIndex][index].name;
         frames[currentFrameIndex].remove(index);
         currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
         emit layersChanged();
@@ -240,4 +241,3 @@ void Model::changePenColor(const QColor &color){
     currentPenColor = color;
     this->setPen();
 }
-

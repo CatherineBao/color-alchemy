@@ -1,3 +1,5 @@
+///
+/// Style checked by:
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Model.h"
@@ -178,6 +180,5 @@ void MainWindow::updateFrameDisplay() {
     ui->frameSpinBox->blockSignals(false);
 
     ui->frameCountLabel->setText(QString("Total Frames: %1").arg(model.getFrameCount() - 1));
-
     ui->deleteFrameButton->setEnabled(model.getFrameCount() > 1);
 }

@@ -47,7 +47,6 @@ private slots:
     void handleLayerVisibilityToggle(int index, bool visible);
     void onLayerVisibilityChanged(int index);
     void onLayerNameChanged(int index);
-
     void handleAddFrame();
     void handleDeleteFrame();
     void updateFrameDisplay();
