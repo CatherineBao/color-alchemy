@@ -1,3 +1,5 @@
+///
+/// Style checked by: Jonas Regehr
 #include "Model.h"
 #include <QPainter>
 #include <QFileDialog>
@@ -14,19 +16,21 @@ Model::Model(QObject *parent)
 
 void Model::addLayer() {
     Layer newLayer;
+
     totalLayersCreated++;
     newLayer.name = QString("Layer %1").arg(totalLayersCreated);
     newLayer.visible = true;
     frames[currentFrameIndex].append(newLayer);
     currentLayerIndex = frames[currentFrameIndex].size() - 1;
+
     emit layersChanged();
 }
 
 void Model::deleteLayer(int index) {
     if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
-        QString layerName = frames[currentFrameIndex][index].name;
         frames[currentFrameIndex].remove(index);
         currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
+
         emit layersChanged();
         emit redrawCanvas(renderCurrentFrame());
     }
@@ -35,6 +39,7 @@ void Model::deleteLayer(int index) {
 void Model::setCurrentLayer(int index) {
     if(index >= 0 && index < frames[currentFrameIndex].size() && index != currentLayerIndex) {
         currentLayerIndex = index;
+
         emit currentLayerChanged(index);
     }
 }
@@ -56,6 +61,7 @@ void Model::setLayerName(int index, const QString& name) {
 void Model::setLayerVisibility(int index, bool visible) {
     if(index >= 0 && index < frames[currentFrameIndex].size()) {
         frames[currentFrameIndex][index].visible = visible;
+
         emit layerVisibilityChanged(index);
         emit redrawCanvas(renderCurrentFrame());
     }
@@ -70,16 +76,20 @@ bool Model:: isLayerVisible(int index) const {
 
 void Model::addFrame() {
     QVector<Layer> newFrame;
+
     for(const Layer& layer : frames[currentFrameIndex]) {
         Layer newLayer;
+
         newLayer.name = layer.name;
         newLayer.visible = layer.visible;
         newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
         newLayer.image = layer.image.copy();
         newFrame.append(newLayer);
     }
+
     frames.insert(currentFrameIndex + 1, newFrame);
     setCurrentFrame(currentFrameIndex + 1);
+
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
 }
@@ -243,9 +253,4 @@ void Model::updateEverything() {
     emit redrawCanvas(renderCurrentFrame());
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
-    void layersChanged();
-    void layerVisibilityChanged(int index);
-    void layerNameChanged(int index);
-    void currentLayerChanged(int index);
-    void framesChanged();
 }

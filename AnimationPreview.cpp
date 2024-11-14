@@ -1,3 +1,5 @@
+///
+/// Style checked by:
 #include "AnimationPreview.h"
 #include "Model.h"
 #include <QTimer>

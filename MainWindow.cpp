@@ -1,3 +1,5 @@
+///
+/// Style checked by:
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Model.h"
