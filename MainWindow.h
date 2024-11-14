@@ -1,3 +1,6 @@
+///
+/// Style checked by:
+///
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -136,6 +139,9 @@ private slots:
     ///
     void handleFrameSelection(int index);
 
+    ///
+    /// \brief resizeCanvas
+    ///
     void resizeCanvas();
 
 };

@@ -1,3 +1,6 @@
+///
+/// Style checked by:
+///
 #ifndef MODEL_H
 #define MODEL_H
 
@@ -111,6 +114,10 @@ public:
     ///
     QString getLayerName(int index) const;
 
+    ///
+    /// \brief getLayerCount
+    /// \return
+    ///
     int getLayerCount() const { return frames[currentFrameIndex].size(); }
 
     ///
@@ -133,8 +140,6 @@ public:
     /// \return true if the layer at index is visible, false otherwise
     ///
     bool isLayerVisible(int index) const;
-
-
 
     ///
     /// \brief addFrame - creates a new frame and updates internal structure
@@ -188,6 +193,11 @@ public:
     ///
     void loadJSON();
 
+    ///
+    /// \brief operator =
+    /// \param other
+    /// \return
+    ///
     Model& operator=(const Model& other);
 
 
@@ -256,9 +266,19 @@ private:
     ///
     int totalLayersCreated = 0;
 
+    ///
+    /// \brief updateCanvas
+    ///
     void updateCanvas();
 
+    ///
+    /// \brief renderFrameInternal
+    /// \param out
+    /// \param index
+    /// \param opacity
+    ///
     void renderFrameInternal(QImage& out, int index, qreal opacity) const;
+
     ///
     /// \brief currentToolColor
     ///
@@ -274,6 +294,11 @@ private:
     ///
     void updateEverything();
 
+    ///
+    /// \brief setGridSize
+    /// \param width
+    /// \param height
+    ///
     void setGridSize(int width, int height);
 
 public slots:

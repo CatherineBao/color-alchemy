@@ -119,6 +119,8 @@ void Model::saveJSON() {
 
     QJsonObject rootObj;
     rootObj["frames"] = upperArray;
+    rootObj["canvas_width"] = canvasWidth;
+    rootObj["canvas_height"] = canvasHeight;
     QJsonDocument saveDoc(rootObj);
 
     QFile saveFile(fileName);
@@ -148,6 +150,9 @@ void Model::loadJSON() {
 
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
     QJsonObject rootObj = loadDoc.object();
+
+    canvasWidth = rootObj["canvas_width"].toInt(canvasWidth);
+    canvasHeight = rootObj["canvas_height"].toInt(canvasHeight);
 
     QJsonArray upperArray = rootObj["frames"].toArray();
     for (const QJsonValue& frameListValue : upperArray) {

@@ -1,3 +1,6 @@
+///
+/// Style checked by:
+///
 #ifndef ANIMATIONPREVIEW_H
 #define ANIMATIONPREVIEW_H
 

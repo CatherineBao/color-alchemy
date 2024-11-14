@@ -1,3 +1,6 @@
+///
+/// Style checked by:
+///
 #ifndef CANVAS_H
 #define CANVAS_H
 
