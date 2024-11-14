@@ -1,5 +1,5 @@
 ///
-/// Style checked by:
+/// Style checked by: Tucker Bolick
 ///
 #include <QColorDialog>
 #include "MainWindow.h"

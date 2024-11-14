@@ -1,5 +1,5 @@
 ///
-/// Style checked by:
+/// Style checked by: Tucker Bolick
 ///
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
