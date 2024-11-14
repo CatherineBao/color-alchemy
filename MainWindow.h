@@ -135,6 +135,8 @@ private slots:
     /// \param index - the index of the frame to select
     ///
     void handleFrameSelection(int index);
+
     void resizeCanvas();
+
 };
 #endif // MAINWINDOW_H

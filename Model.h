@@ -111,6 +111,8 @@ public:
     ///
     QString getLayerName(int index) const;
 
+    int getLayerCount() const { return frames[currentFrameIndex].size(); }
+
     ///
     /// \brief setLayerName - changes the name of a layer
     /// \param index - the index of the layer to change
