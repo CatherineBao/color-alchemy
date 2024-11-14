@@ -92,13 +92,13 @@ public:
 
     ///
     /// \brief deleteLayer - deletes an old layer and updates internal structure
-    /// \param index - the index of the layer to dleet
+    /// \param index - the index of the layer to delete
     ///
     void deleteLayer(int index);
 
     ///
-    /// \brief getCurrentLayer
-    /// \return
+    /// \brief getCurrentLayer - gets the current layer selected
+    /// \return the index of the current layer
     ///
     int getCurrentLayer() const { return currentLayerIndex; }
 
@@ -116,8 +116,8 @@ public:
     QString getLayerName(int index) const;
 
     ///
-    /// \brief getLayerCount
-    /// \return
+    /// \brief getLayerCount - gets the number of layers in the current frame
+    /// \return - the number of layers in the current frame
     ///
     int getLayerCount() const { return frames[currentFrameIndex].size(); }
 
@@ -154,50 +154,50 @@ public:
     void deleteFrame(int index);
 
     ///
-    /// \brief getCurrentFrame
-    /// \return
+    /// \brief getCurrentFrame - gets the frame you currently have selected
+    /// \return - the index of the frame you have selected
     ///
     int getCurrentFrame() const { return currentFrameIndex; }
 
     ///
-    /// \brief setCurrentFrame
-    /// \param index
+    /// \brief setCurrentFrame - changes the currently selected frame
+    /// \param index - the index of the layer to select
     ///
     void setCurrentFrame(int index);
 
     ///
-    /// \brief getFrameCount
-    /// \return
+    /// \brief getFrameCount - gets the number of frames in the project
+    /// \return - the number of frames in the proejct
     ///
     int getFrameCount() const { return frames.size(); }
 
     ///
-    /// \brief renderFrame
-    /// \param index
-    /// \return
+    /// \brief renderFrame - builds an image for a frame with the given contents
+    /// \param index - the index of the image to draw
+    /// \return - the finished image
     ///
     QImage renderFrame(int index) const;
 
     ///
-    /// \brief renderCurrentFrame
-    /// \return
+    /// \brief renderCurrentFrame - renders the frame currently selected
+    /// \return - the finished image of the frame
     ///
     QImage renderCurrentFrame() const;
 
     ///
-    /// \brief saveJSON
+    /// \brief saveJSON - saves the sprite to a json file
     ///
     void saveJSON();
 
     ///
-    /// \brief loadJSON
+    /// \brief loadJSON - loads a sprite from a json file
     ///
     void loadJSON();
 
     ///
-    /// \brief operator =
-    /// \param other
-    /// \return
+    /// \brief operator = - sets a model to be the same as another model
+    /// \param other - the other model to copy from
+    /// \return - a new model equal to the other model
     ///
     Model& operator=(const Model& other);
 
@@ -215,127 +215,126 @@ signals:
 
 private:
     ///
-    /// \brief frames
+    /// \brief frames - all of the frames in the project
     ///
     QVector<QVector<Layer>> frames;
 
     ///
-    /// \brief PIXEL_SIZE
+    /// \brief PIXEL_SIZE - the size of each pixel
     ///
     const int PIXEL_SIZE = 10;
 
     ///
-    /// \brief GRID_WIDTH
+    /// \brief GRID_WIDTH - the width of the grid
     ///
     int canvasWidth = 36;
 
     ///
-    /// \brief GRID_HEIGHT
-    ///
+    /// \brief GRID_HEIGHT - the height of the grid
     int canvasHeight = 36;
 
     ///
-    /// \brief isPen
+    /// \brief isPen - If the tool is a pen
     ///
     bool isPen = true;
 
     ///
-    /// \brief currentToolWidth
+    /// \brief currentToolWidth - the current size of the tool
     ///
     int currentToolWidth = 1;
 
     ///
-    /// \brief currentPenWidth
+    /// \brief currentPenWidth - current size of the pen
     ///
     int currentPenWidth = 1;
 
     ///
-    /// \brief currentEraserWidth
+    /// \brief currentEraserWidth - current size of the eraser
     ///
     int currentEraserWidth = 1;
 
     ///
-    /// \brief currentFrameIndex
+    /// \brief currentFrameIndex - the index of the current frame
     ///
     int currentFrameIndex = 0;
 
     ///
-    /// \brief currentLayerIndex
+    /// \brief currentLayerIndex - the index of the current layer
     ///
     int currentLayerIndex = 0;
 
     ///
-    /// \brief totalLayersCreated
+    /// \brief totalLayersCreated - the number of total layers created
     ///
     int totalLayersCreated = 0;
 
     ///
-    /// \brief updateCanvas
+    /// \brief updateCanvas - updates the canvas to the latest draw state
     ///
     void updateCanvas();
 
     ///
-    /// \brief renderFrameInternal
-    /// \param out
-    /// \param index
-    /// \param opacity
+    /// \brief renderFrameInternal - builds an image for a frame with the given contents
+    /// \param out - the output image
+    /// \param index - the index of the frame
+    /// \param opacity - the opacity of the image
     ///
     void renderFrameInternal(QImage& out, int index, qreal opacity) const;
 
     ///
-    /// \brief currentToolColor
+    /// \brief currentToolColor - the color of the current tool
     ///
     QColor currentToolColor = Qt::black;
 
     ///
-    /// \brief currentPenColor
+    /// \brief currentPenColor - the color of the current pen
     ///
     QColor currentPenColor = Qt::black;
 
     ///
-    /// \brief updateEverything
+    /// \brief updateEverything - updates everything in the code
     ///
     void updateEverything();
 
     ///
-    /// \brief setGridSize
-    /// \param width
-    /// \param height
+    /// \brief setGridSize - sets the size of the grid
+    /// \param width - the new width
+    /// \param height - the new height
     ///
     void setGridSize(int width, int height);
 
 public slots:
     ///
-    /// \brief setPen
+    /// \brief setPen - sets the tool to the pen
     ///
     void setPen();
 
     ///
-    /// \brief setEraser
+    /// \brief setEraser - sets the tool to the eraser
     ///
     void setEraser();
 
     ///
-    /// \brief changePenSize
-    /// \param size
+    /// \brief changePenSize - changes the size of the pen
+    /// \param size - the new size
     ///
     void changePenSize(int size);
 
     ///
-    /// \brief changeEraserSize
-    /// \param size
+    /// \brief changeEraserSize - changes the size of the eraser
+    /// \param size - the new size
     ///
     void changeEraserSize(int size);
 
     ///
-    /// \brief changePenColor
-    /// \param color
+    /// \brief changePenColor - changes the drawing color
+    /// \param color - the new color
     ///
     void changePenColor(const QColor &color);
 
     ///
-    /// \brief drawPixel
-    /// \param pos
+    /// \brief drawPixel - draws a pixel on the screen
+    /// \param pos - the position of the mouse on where to draw
     ///
     void drawPixel(const QPoint &pos);
 };
