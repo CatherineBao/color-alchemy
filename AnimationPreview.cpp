@@ -1,5 +1,5 @@
 ///
-/// Style checked by:
+/// Style checked by: Mitch Briles
 ///
 #include <QTimer>
 #include <QPainter>
