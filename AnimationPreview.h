@@ -10,7 +10,7 @@
 #include "Model.h"
 
 ///
-/// \brief The AnimationPreview class
+/// \brief The AnimationPreview class - handles the animation preview window
 ///
 class AnimationPreview : public QWidget
 {
@@ -18,64 +18,58 @@ class AnimationPreview : public QWidget
 
 public:
     ///
-    /// \brief AnimationPreview
-    /// \param parent
+    /// \brief AnimationPreview - constructor for animation preview
     ///
     explicit AnimationPreview(QWidget *parent = nullptr);
 
     ///
-    /// \brief setModel
-    /// \param _model
+    /// \brief setModel - sets the internal model variable
     ///
     void setModel(Model* _model);
 
 private:
     ///
-    /// \brief timer
+    /// \brief timer - timer used to display animation
     ///
     QTimer* timer;
 
     ///
-    /// \brief frameIndex
+    /// \brief frameIndex - index of current frame
     ///
     int frameIndex;
 
     ///
-    /// \brief frame
+    /// \brief frame - current frame
     ///
     QImage frame;
 
     ///
-    /// \brief model
+    /// \brief model - reference to the model
     ///
     Model* model;
 
     ///
-    /// \brief windowSize
+    /// \brief windowSize - the size of the window
     ///
     QSize windowSize;
 
     ///
-    /// \brief nextFrame
+    /// \brief nextFrame - moves to the next frame
     ///
     void nextFrame();
 
 protected:
-    ///
-    /// \brief paintEvent
-    /// \param event
-    ///
     void paintEvent(QPaintEvent *event) override;
 
 public slots:
     ///
-    /// \brief updateFramerate
+    /// \brief updateFramerate - sets the framerate to fps
     /// \param fps
     ///
     void updateFramerate(int fps);
 
     ///
-    /// \brief resizeWindow
+    /// \brief resizeWindow - resizes the window to width, height
     /// \param width
     /// \param height
     ///
