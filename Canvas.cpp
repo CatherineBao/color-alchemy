@@ -1,6 +1,7 @@
 ///
-/// Style checked by:
+/// Style checked by: Catherine Bao
 ///
+
 #include <QMouseEvent>
 #include <QPainter>
 #include "Canvas.h"

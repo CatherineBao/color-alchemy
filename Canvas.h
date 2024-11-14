@@ -1,6 +1,7 @@
 ///
-/// Style checked by:
+/// Style checked by: Catherine Bao
 ///
+
 #ifndef CANVAS_H
 #define CANVAS_H
 

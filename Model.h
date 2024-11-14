@@ -1,6 +1,7 @@
 ///
-/// Style checked by:
+/// Style checked by: Catherine Bao
 ///
+
 #ifndef MODEL_H
 #define MODEL_H
 
