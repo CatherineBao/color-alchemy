@@ -54,6 +54,10 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
         bool visible = item->checkState() == Qt::Checked;
         handleLayerVisibilityToggle(row, visible);
         });
+
+    connect(canvas, &Canvas::gridResized, animationPreview, &AnimationPreview::resizeWindow);
+    connect(this, &MainWindow::frameRateChanged, animationPreview, &AnimationPreview::updateFramerate);
+    connect(ui->fpsBox, QOverload<int>::of(&QSpinBox::valueChanged), animationPreview, [this](){emit frameRateChanged(ui->fpsBox->value());});
 }
 
 MainWindow::~MainWindow()
