@@ -12,30 +12,26 @@ Canvas::Canvas(QWidget *parent)
     frame.fill(Qt::transparent);
 }
 
-void Canvas::mousePressEvent(QMouseEvent *event)
-{
+void Canvas::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         drawing = true;
         emit pixelChanged(event->pos());
     }
 }
 
-void Canvas::mouseMoveEvent(QMouseEvent *event)
-{
+void Canvas::mouseMoveEvent(QMouseEvent *event) {
     if (drawing)
         emit pixelChanged(event->pos());
 }
 
-void Canvas::mouseReleaseEvent(QMouseEvent *event)
-{
+void Canvas::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton && drawing) {
         emit pixelChanged(event->pos());
         drawing = false;
     }
 }
 
-void Canvas::paintEvent(QPaintEvent *event)
-{
+void Canvas::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     painter.drawImage(dirtyRect, frame, frame.rect());

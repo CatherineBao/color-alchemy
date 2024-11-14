@@ -51,12 +51,11 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     updateFrameDisplay();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::openColorPicker(){
+void MainWindow::openColorPicker() {
 
     QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
