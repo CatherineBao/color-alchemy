@@ -24,11 +24,10 @@ void Model::addLayer() {
 
 void Model::deleteLayer(int index) {
     if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
-        QString layerName = frames[currentFrameIndex][index].name;
         frames[currentFrameIndex].remove(index);
         currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
         emit layersChanged();
-        emit redrawCanvas(renderCurrentFrame());
+        updateCanvas();
     }
 }
 
@@ -57,7 +56,7 @@ void Model::setLayerVisibility(int index, bool visible) {
     if(index >= 0 && index < frames[currentFrameIndex].size()) {
         frames[currentFrameIndex][index].visible = visible;
         emit layerVisibilityChanged(index);
-        emit redrawCanvas(renderCurrentFrame());
+        updateCanvas();
     }
 }
 
@@ -70,16 +69,9 @@ bool Model:: isLayerVisible(int index) const {
 
 void Model::addFrame() {
     QVector<Layer> newFrame;
-    for(const Layer& layer : frames[currentFrameIndex]) {
-        Layer newLayer;
-        newLayer.name = layer.name;
-        newLayer.visible = layer.visible;
-        newLayer.image = QImage(layer.image.width(), layer.image.height(), layer.image.format());
-        newLayer.image = layer.image.copy();
-        newFrame.append(newLayer);
-    }
     frames.insert(currentFrameIndex + 1, newFrame);
     setCurrentFrame(currentFrameIndex + 1);
+    addLayer();
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
 }
@@ -89,12 +81,14 @@ void Model::deleteFrame(int index) {
         frames.remove(index);
         currentFrameIndex = qMin(currentFrameIndex, frames.size() - 1);
         emit framesChanged();
+        updateCanvas();
     }
 }
 
 void Model::setCurrentFrame(int index) {
     if(index >= 0 && index < frames.size() && index != currentFrameIndex) {
         currentFrameIndex = index;
+        updateCanvas();
     }
 }
 
@@ -161,24 +155,28 @@ void Model::loadJSON() {
     }
 
     frames = layersData;
-    emit redrawCanvas(renderCurrentFrame());
+    updateEverything();
 }
 
-QImage Model::renderFrame(int index) const {
-    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
-    result.fill(Qt::transparent);
-    QPainter painter(&result);
-
+void Model::renderFrameInternal(QImage& out, int index, qreal opacity) const {
     if (index > frames.size() - 1 || index < 0) {
-        return result;
+        return;
     }
+
+    QPainter painter(&out);
+    painter.setOpacity(opacity);
 
     for(const Layer& layer : frames[index]) {
         if(layer.visible) {
             painter.drawImage(0, 0, layer.image);
         }
     }
+}
 
+QImage Model::renderFrame(int index) const {
+    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
+    renderFrameInternal(result, index, 1.0);
     return result;
 }
 
@@ -208,7 +206,7 @@ void Model::drawPixel(const QPoint &pos)
 
     painter.drawRect(x, y, drawWidth, drawWidth);
 
-    emit redrawCanvas(renderCurrentFrame());
+    updateCanvas();
 }
 
 void Model::setPen() {
@@ -243,12 +241,27 @@ void Model::changePenColor(const QColor &color){
 }
 
 void Model::updateEverything() {
-    emit redrawCanvas(renderCurrentFrame());
     emit framesChanged();
     emit currentFrameChanged(currentFrameIndex);
-    void layersChanged();
-    void layerVisibilityChanged(int index);
-    void layerNameChanged(int index);
-    void currentLayerChanged(int index);
-    void framesChanged();
+    emit layersChanged();
+    updateCanvas();
+}
+
+void Model::updateCanvas() {
+    // emit redrawCanvas(renderCurrentFrame());
+    qInfo() << "update canvas: " << currentFrameIndex;
+    QImage result(GRID_WIDTH, GRID_HEIGHT, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
+
+    if (currentFrameIndex > 1) {
+        renderFrameInternal(result, currentFrameIndex - 2, 0.2);
+    }
+
+    if (currentFrameIndex > 0) {
+        renderFrameInternal(result, currentFrameIndex - 1, 0.4);
+    }
+
+    renderFrameInternal(result, currentFrameIndex, 1);
+
+    emit redrawCanvas(result);
 }

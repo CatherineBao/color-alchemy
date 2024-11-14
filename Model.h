@@ -110,7 +110,10 @@ private:
     int currentLayerIndex = 0;
     int totalLayersCreated = 0;
 
+    void updateCanvas();
     void updateEverything();
+
+    void renderFrameInternal(QImage& out, int index, qreal opacity) const;
 
 public slots:
     void setPen();
