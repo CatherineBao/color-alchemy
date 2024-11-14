@@ -52,6 +52,7 @@ public slots:
 
 signals:
     void currentLayerChanged(int index);
+    void gridResized(int width, int height);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

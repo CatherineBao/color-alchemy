@@ -117,6 +117,7 @@ void Canvas::changeEraserSize(int size) {
 
 void Canvas::resizeGrid(int width, int height) {
     if (width <= 0 || height <= 0) return;
+    emit gridResized(width, height);
 
     QImage oldImage = fullImage();
     int oldWidth = gridWidth;

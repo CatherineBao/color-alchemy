@@ -110,7 +110,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="verticalFrame">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>170</x>
       <y>110</y>
       <width>161</width>
       <height>221</height>
@@ -145,10 +145,10 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frameInfo">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>330</y>
+      <x>790</x>
+      <y>312</y>
       <width>261</width>
-      <height>73</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -187,7 +187,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="tools">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>20</x>
       <y>110</y>
       <width>131</width>
       <height>321</height>
@@ -251,7 +251,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>770</x>
+      <x>790</x>
       <y>60</y>
       <width>261</width>
       <height>241</height>
@@ -264,31 +264,6 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="1" column="0">
-      <widget class="QSpinBox" name="fps">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>24</number>
-       </property>
-       <property name="value">
-        <number>12</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="fpsLabel">
-       <property name="styleSheet">
-        <string notr="true">QFrame {
-	border: none;   
-}</string>
-       </property>
-       <property name="text">
-        <string>FPS</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0" colspan="2">
       <widget class="AnimationPreview" name="animationPreview" native="true">
        <property name="styleSheet">
@@ -299,15 +274,38 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QSpinBox" name="fpsBox">
+       <property name="styleSheet">
+        <string notr="true">QFrame {
+	background-color: #4E878C;
+	border-radius: 10px;
+}</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2"/>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="canvasInfoLabel_2">
+       <property name="styleSheet">
+        <string notr="true">QFrame {
+	border: none
+}</string>
+       </property>
+       <property name="text">
+        <string>FPS</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
-   <widget class="QFrame" name="canvasInfo">
+   <widget class="QFrame" name="">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>420</y>
+      <x>790</x>
+      <y>400</y>
       <width>261</width>
-      <height>65</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -316,21 +314,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 	border-radius: 10px;
 }</string>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="2" column="0">
-      <widget class="QSpinBox" name="canvasWidthBox">
-       <property name="maximum">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="x">
-       <property name="text">
-        <string>x</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QGridLayout" name="gridLayout_4">
      <item row="2" column="2">
       <widget class="QSpinBox" name="canvasHeightBox">
        <property name="maximum">
@@ -338,8 +322,32 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="x">
+       <property name="styleSheet">
+        <string notr="true">QFrame {
+	border: none;
+}</string>
+       </property>
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QSpinBox" name="canvasWidthBox">
+       <property name="maximum">
+        <number>50</number>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QLabel" name="canvasInfoLabel">
+       <property name="styleSheet">
+        <string notr="true">QFrame {
+	border: none
+}</string>
+       </property>
        <property name="text">
         <string>CANVAS INFO</string>
        </property>
