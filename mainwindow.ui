@@ -74,6 +74,7 @@ QListWidget {
     font-weight: bold;           
     text-transform: uppercase;  
     letter-spacing: 1.5px;   
+	padding: 5px;
 }
 
 QScrollBar:horizontal, QScrollBar:vertical {
