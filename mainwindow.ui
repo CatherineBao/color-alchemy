@@ -166,7 +166,7 @@ QPushButton {
     <property name="geometry">
      <rect>
       <x>779</x>
-      <y>70</y>
+      <y>20</y>
       <width>211</width>
       <height>221</height>
      </rect>
@@ -227,6 +227,61 @@ QPushButton {
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>260</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Preview</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="fps">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>510</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>24</number>
+    </property>
+    <property name="value">
+     <number>12</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>510</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FPS</string>
+    </property>
+   </widget>
+   <widget class="AnimationPreview" name="animationPreview" native="true">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>290</y>
+      <width>209</width>
+      <height>209</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
@@ -235,6 +290,12 @@ QPushButton {
    <class>Canvas</class>
    <extends>QWidget</extends>
    <header>Canvas.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AnimationPreview</class>
+   <extends>QWidget</extends>
+   <header location="global">AnimationPreview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

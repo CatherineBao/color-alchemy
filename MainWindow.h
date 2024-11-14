@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include "Model.h"
 #include "Canvas.h"
+#include "AnimationPreview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,6 +24,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Canvas *canvas;
+    AnimationPreview *animationPreview;
     Model& model;
 
     void setupLayerConnections();

@@ -35,6 +35,7 @@ public:
     void deleteFrame(int index);
     void setCurrentFrame(int index);
 
+    QImage renderFrame(int index) const;
     QImage fullImage() const;
 
     const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrame]; }

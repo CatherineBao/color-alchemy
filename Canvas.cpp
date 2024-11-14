@@ -224,16 +224,24 @@ void Canvas::setCurrentFrame(int index) {
     }
 }
 
-QImage Canvas::fullImage() const {
+QImage Canvas::renderFrame(int index) const {
     QImage result(gridWidth * pixelSize, gridHeight * pixelSize, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
     QPainter painter(&result);
 
-    for(const Layer& layer : frames[currentFrame]) {
+    if (index > frames.size() - 1 || index < 0) {
+        return result;
+    }
+
+    for(const Layer& layer : frames[index]) {
         if(layer.visible) {
             painter.drawImage(0, 0, layer.image);
         }
     }
 
     return result;
+}
+
+QImage Canvas::fullImage() const {
+    return renderFrame(currentFrame);
 }

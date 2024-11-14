@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "Model.h"
 #include "Canvas.h"
+#include "AnimationPreview.h"
 #include <QColorDialog>
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
@@ -11,6 +12,8 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
 {
     ui->setupUi(this);
     canvas = qobject_cast<Canvas*>(ui->editor);
+    animationPreview = qobject_cast<AnimationPreview*>(ui->animationPreview);
+    animationPreview->setCanvas(canvas);
 
     ui->penSize->setValue(1);
     ui->eraserSize->setValue(1);
