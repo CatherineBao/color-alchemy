@@ -144,7 +144,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
       <x>830</x>
       <y>302</y>
       <width>311</width>
-      <height>81</height>
+      <height>91</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -299,7 +299,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     <property name="geometry">
      <rect>
       <x>830</x>
-      <y>390</y>
+      <y>410</y>
       <width>311</width>
       <height>171</height>
      </rect>
