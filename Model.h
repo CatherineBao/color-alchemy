@@ -3,6 +3,11 @@
 
 #include <QObject>
 #include <QImage>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QBuffer>
+#include <QByteArray>
 
 class Model : public QObject
 {
@@ -15,6 +20,37 @@ public:
         QString name;
         QImage image;
         bool visible = true;
+
+        QJsonObject toJson() const {
+
+            QJsonObject jsonObj;
+            jsonObj["name"] = name;
+
+            QByteArray byteArray;
+            QBuffer buffer(&byteArray);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PNG");
+            jsonObj["image"] = QString::fromLatin1(byteArray.toBase64());
+
+            jsonObj["visible"] = visible;
+
+            return jsonObj;
+
+        }
+
+
+        static Layer fromJson(const QJsonObject& jsonObj) {
+            Layer layer;
+
+            layer.name = jsonObj["name"].toString();
+            QString base64Image = jsonObj["image"].toString();
+            QByteArray byteArray = QByteArray::fromBase64(base64Image.toLatin1());
+
+            layer.image.loadFromData(byteArray, "PNG");
+            layer.visible = jsonObj["visible"].toBool();
+            return layer;
+        }
+
     };
 
     void resizePixelGrid(int width, int height);
@@ -41,6 +77,9 @@ public:
     int getCurrentFrame() const { return currentFrame; }
     int getFrameCount() const { return frames.size(); }
     const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrame]; }
+
+    void save();
+    QVector<QVector<Layer>> load();
 
 signals:
     void pixelGridChanged();
