@@ -36,12 +36,12 @@ public:
     void setCurrentFrame(int index);
 
     QImage renderFrame(int index) const;
-    QImage fullImage() const;
+    QImage renderCurrentFrame() const;
 
-    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrame]; }
+    const QVector<Layer>& getCurrentFrameLayers() const { return frames[currentFrameIndex]; }
     int getFrameCount() const { return frames.size(); }
-    int getCurrentFrame() const { return currentFrame; }
-    int getCurrentLayer() const { return currentLayer; }
+    int getCurrentFrame() const { return currentFrameIndex; }
+    int getCurrentLayer() const { return currentLayerIndex; }
 
 public slots:
     void setPen();
@@ -82,8 +82,8 @@ private:
     QColor backgroundColor = Qt::white;
 
     QVector<QVector<Layer>> frames;
-    int currentFrame = 0;
-    int currentLayer = 0;
+    int currentFrameIndex = 0;
+    int currentLayerIndex = 0;
     int totalLayersCreated = 0;
 };
 

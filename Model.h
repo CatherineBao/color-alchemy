@@ -31,13 +31,10 @@ public:
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "PNG");
             jsonObj["image"] = QString::fromLatin1(byteArray.toBase64());
-
             jsonObj["visible"] = visible;
-
             return jsonObj;
 
         }
-
 
         static Layer fromJson(const QJsonObject& jsonObj) {
             Layer layer;
@@ -80,6 +77,7 @@ public:
 
     void save();
     QVector<QVector<Layer>> load();
+    QVector<QVector<Layer>> frames;
 
 signals:
     void pixelGridChanged();
@@ -93,7 +91,6 @@ signals:
 private:
     int pixelWidth;
     int pixelHeight;
-    QVector<QVector<Layer>> frames;
     int currentFrame = 0;
     int currentLayer = 0;
     int totalLayersCreated = 0;

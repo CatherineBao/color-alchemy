@@ -32,7 +32,7 @@ private:
 
 signals:
     void penClicked();
-    void changeColor(const QColor &color);
+    void colorChanged(const QColor &color);
     void frameRateChanged(int fps);
 
 public slots:

@@ -120,13 +120,14 @@ void Model::save(){
     for (const auto& frameList : frames) {
         QJsonArray framesArray;
         for(const auto& frame : frameList){
+            qDebug() << frame.image;
             framesArray.append(frame.toJson());
         }
         upperArray.append(framesArray);
     }
 
     QJsonObject rootObj;
-    rootObj["sprites"] = upperArray;
+    rootObj["frames"] = upperArray;
     QJsonDocument saveDoc(rootObj);
 
     QFile saveFile(fileName);
@@ -137,4 +138,40 @@ void Model::save(){
 
     saveFile.write(saveDoc.toJson());
     saveFile.close();
+}
+
+
+QVector<QVector<Model::Layer>> Model::load() {
+    QVector<QVector<Model::Layer>> layersData;
+
+    QString fileName = QFileDialog::getOpenFileName(nullptr, "Load Sprites", "", "JSON Files (*.json)");
+    if (fileName.isEmpty()) return layersData;
+
+    QFile loadFile(fileName);
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(nullptr, "Error", "Couldn't open load file.");
+        return layersData;
+    }
+
+    QByteArray loadData = loadFile.readAll();
+    loadFile.close();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+    QJsonObject rootObj = loadDoc.object();
+
+    QJsonArray upperArray = rootObj["frames"].toArray();
+    for (const QJsonValue& frameListValue : upperArray) {
+        QJsonArray framesArray = frameListValue.toArray();
+
+        QVector<Model::Layer> layerList;
+        for (const QJsonValue& frameValue : framesArray) {
+            QJsonObject frameObj = frameValue.toObject();
+            Model::Layer layer = Model::Layer::fromJson(frameObj);
+            layerList.append(layer);
+        }
+
+        layersData.append(layerList);
+    }
+
+    return layersData;
 }

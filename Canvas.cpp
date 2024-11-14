@@ -14,8 +14,8 @@ Canvas::Canvas(QWidget *parent)
 }
 
 void Canvas::initializeImage(int width, int height) {
-    frames[currentFrame][currentLayer].image = QImage(width, height, QImage::Format_ARGB32);
-    frames[currentFrame][currentLayer].image.fill(Qt::transparent);
+    frames[currentFrameIndex][currentLayerIndex].image = QImage(width, height, QImage::Format_ARGB32);
+    frames[currentFrameIndex][currentLayerIndex].image.fill(Qt::transparent);
 
     gridWidth = width / pixelSize;
     gridHeight = height / pixelSize;
@@ -56,7 +56,7 @@ void Canvas::drawPixel(const QPoint &pos)
     if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
         return;
 
-    QPainter painter(&frames[currentFrame][currentLayer].image);
+    QPainter painter(&frames[currentFrameIndex][currentLayerIndex].image);
     painter.setPen(Qt::NoPen);
 
     int scaledX = x * pixelSize;
@@ -79,7 +79,7 @@ void Canvas::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    painter.drawImage(dirtyRect, fullImage(), dirtyRect);
+    painter.drawImage(dirtyRect, renderCurrentFrame(), dirtyRect);
 
     // draw grids
     painter.setPen(Qt::gray);
@@ -119,7 +119,7 @@ void Canvas::resizeGrid(int width, int height) {
     if (width <= 0 || height <= 0) return;
     emit gridResized(width, height);
 
-    QImage oldImage = fullImage();
+    QImage oldImage = renderCurrentFrame();
     int oldWidth = gridWidth;
     int oldHeight = gridHeight;
     int oldPixelSize = pixelSize;
@@ -149,7 +149,7 @@ void Canvas::resizeGrid(int width, int height) {
         }
     }
 
-    frames[currentFrame][currentLayer].image = newImage;
+    frames[currentFrameIndex][currentLayerIndex].image = newImage;
     setFixedSize(gridWidth * pixelSize, gridHeight * pixelSize);
     update();
 }
@@ -178,44 +178,44 @@ void Canvas::addLayer() {
     newLayer.image.fill(Qt::transparent);
     newLayer.visible = true;
 
-    frames[currentFrame].append(newLayer);
-    currentLayer = frames[currentFrame].size() - 1;
+    frames[currentFrameIndex].append(newLayer);
+    currentLayerIndex = frames[currentFrameIndex].size() - 1;
     update();
 }
 
 void Canvas::deleteLayer(int index) {
-    if(frames[currentFrame].size() > 1 && index >= 0 && index < frames[currentFrame].size()) {
-        QString layerName = frames[currentFrame][index].name;
-        frames[currentFrame].remove(index);
-        currentLayer = qMin(currentLayer, frames[currentFrame].size() - 1);
+    if(frames[currentFrameIndex].size() > 1 && index >= 0 && index < frames[currentFrameIndex].size()) {
+        QString layerName = frames[currentFrameIndex][index].name;
+        frames[currentFrameIndex].remove(index);
+        currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
         update();
     }
 }
 
 void Canvas::setCurrentLayer(int index) {
-    if(index >= 0 && index < frames[currentFrame].size() && index != currentLayer) {
-        currentLayer = index;
+    if(index >= 0 && index < frames[currentFrameIndex].size() && index != currentLayerIndex) {
+        currentLayerIndex = index;
         emit currentLayerChanged(index);
     }
 }
 
 void Canvas::setLayerVisibility(int index, bool visible) {
-    if(index >= 0 && index < frames[currentFrame].size()) {
-        frames[currentFrame][index].visible = visible;
+    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+        frames[currentFrameIndex][index].visible = visible;
         update();
     }
 }
 
 void Canvas::setLayerName(int index, const QString& name) {
-    if(index >= 0 && index < frames[currentFrame].size()) {
-        frames[currentFrame][index].name = name;
+    if(index >= 0 && index < frames[currentFrameIndex].size()) {
+        frames[currentFrameIndex][index].name = name;
     }
 }
 
 void Canvas::addFrame() {
     QVector<Layer> newFrame;
 
-    for(const Layer& layer : frames[currentFrame]) {
+    for(const Layer& layer : frames[currentFrameIndex]) {
         Layer newLayer;
         newLayer.name = layer.name;
         newLayer.visible = layer.visible;
@@ -223,24 +223,24 @@ void Canvas::addFrame() {
         newLayer.image = layer.image.copy();
         newFrame.append(newLayer);
     }
-    frames.insert(currentFrame + 1, newFrame);
-    currentFrame++;
+    frames.insert(currentFrameIndex + 1, newFrame);
+    currentFrameIndex++;
     update();
 }
 
 void Canvas::deleteFrame(int index) {
     if(frames.size() > 1 && index >= 0 && index < frames.size()) {
         frames.remove(index);
-        currentFrame = qMin(currentFrame, frames.size() - 1);
+        currentFrameIndex = qMin(currentFrameIndex, frames.size() - 1);
         update();
     }
 }
 
 void Canvas::setCurrentFrame(int index) {
-    if(index >= 0 && index < frames.size() && index != currentFrame) {
-        currentFrame = index;
-        currentLayer = qMin(currentLayer, frames[currentFrame].size() - 1);
-        emit currentLayerChanged(currentLayer);
+    if(index >= 0 && index < frames.size() && index != currentFrameIndex) {
+        currentFrameIndex = index;
+        currentLayerIndex = qMin(currentLayerIndex, frames[currentFrameIndex].size() - 1);
+        emit currentLayerChanged(currentLayerIndex);
         update();
     }
 }
@@ -263,6 +263,6 @@ QImage Canvas::renderFrame(int index) const {
     return result;
 }
 
-QImage Canvas::fullImage() const {
-    return renderFrame(currentFrame);
+QImage Canvas::renderCurrentFrame() const {
+    return renderFrame(currentFrameIndex);
 }
